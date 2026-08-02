@@ -201,24 +201,21 @@ export default function VideoProcessor() {
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${
+            className={`border-2 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${
               isDragging 
-                ? 'border-indigo-500 bg-indigo-500/10 scale-[1.01]' 
-                : 'border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800/30'
+                ? 'border-slate-500 bg-[#0a0c10] scale-[1.01]' 
+                : 'border-slate-800 hover:border-slate-600 hover:bg-[#0a0c10]'
             }`}
           >
-            <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-4 shadow-lg shadow-indigo-500/10">
+            <div className="w-16 h-16 rounded-2xl bg-[#0a0c10] border border-slate-800 flex items-center justify-center text-slate-400 mb-4">
               <Upload className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-semibold text-white mb-1">
-              Glissez votre vidéo ici
+              Sélectionnez une vidéo
             </h3>
-            <p className="text-sm text-slate-400 mb-4 text-center">
-              Ou cliquez pour parcourir vos fichiers (MP4, WEBM, MOV, Shorts)
+            <p className="text-sm text-slate-500 mb-4 text-center">
+              MP4, WEBM, MOV
             </p>
-            <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-800 text-indigo-300 border border-indigo-500/20 flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-400" /> Traitement 100% local ultra-rapide
-            </span>
             <input
               id="videoInput"
               type="file"
