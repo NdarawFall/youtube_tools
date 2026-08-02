@@ -4,6 +4,7 @@ import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
 import { Video, LayoutGrid, Type, RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
   { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extraction d\'images HD' },
