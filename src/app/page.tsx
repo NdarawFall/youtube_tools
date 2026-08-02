@@ -3,7 +3,7 @@ import { useState } from 'react';
 import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
-import { Video, LayoutGrid, Type, RefreshCw } from 'lucide-react';
+import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
@@ -35,7 +35,7 @@ export default function Home() {
             onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
             className="p-2.5 rounded-xl bg-[#0a0c10] border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-600 transition-all active:scale-95"
           >
-            <LayoutGrid className="w-4 h-4" />
+            {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <LayoutGrid className="w-4 h-4" />}
           </button>
           <h1 className="font-semibold text-sm tracking-tight text-white">
             CreatorStudio
