@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
-import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
@@ -15,6 +15,12 @@ const TOOLS = [
 export default function Home() {
   const [activeToolId, setActiveToolId] = useState('frame-extractor');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const renderTool = () => {
     switch (activeToolId) {
@@ -24,6 +30,26 @@ export default function Home() {
       default: return <div className="text-center py-20 text-slate-500">Outil en développement...</div>;
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen bg-slate-50 flex flex-col items-center justify-center gap-4">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex items-center gap-3"
+        >
+          <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-xl">
+             <LayoutGrid className="w-6 h-6 text-indigo-600" />
+          </div>
+          <h1 className="font-bold text-xl tracking-tight text-slate-950">
+            CreatorStudio
+          </h1>
+        </motion.div>
+        <Loader2 className="w-6 h-6 text-slate-400 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <main className="h-screen w-screen bg-slate-50 text-slate-800 font-sans p-4 flex flex-col overflow-hidden">
@@ -78,7 +104,7 @@ export default function Home() {
         </AnimatePresence>
 
         {/* Content Area */}
-        <section className="flex-1 bg-gradient-to-br from-white to-slate-50 border border-slate-200/60 shadow-xl shadow-slate-200/30 rounded-3xl p-8 flex flex-col items-center justify-center overflow-hidden">
+        <section className="flex-1 bg-gradient-to-br from-white to-slate-50 border border-slate-200/80 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] rounded-3xl p-8 flex flex-col items-center justify-center overflow-hidden">
             <div className="w-full max-w-2xl flex flex-col items-center justify-center">
                 <div className="text-center mb-10">
                     <h2 className="text-2xl font-extrabold text-slate-950 mb-2">
