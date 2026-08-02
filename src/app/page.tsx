@@ -60,10 +60,6 @@ export default function Home() {
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={`p-2.5 rounded-2xl border transition-all ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            <button className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-medium transition-all ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-300' : 'bg-white border-slate-200 text-slate-700'}`}>
-                <User className="w-3.5 h-3.5" />
-                <span>Connexion Google</span>
-            </button>
         </div>
       </header>
 
