@@ -5,7 +5,7 @@ import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { RefreshCw, Upload, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function ReverseVideo() {
+export default function ReverseVideo({ theme }: { theme: 'dark' | 'light' }) {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -13,16 +13,11 @@ export default function ReverseVideo() {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
 
-  // Robust thumbnail extraction
   useEffect(() => {
     if (!videoFile) return;
     const url = URL.createObjectURL(videoFile);
     const video = document.createElement('video');
-    
-    const handleLoadedMetadata = () => {
-        video.currentTime = 1; // Seek to 1s to avoid black frames at 0s
-    };
-    
+    const handleLoadedMetadata = () => { video.currentTime = 1; };
     const handleSeeked = () => {
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
@@ -33,7 +28,6 @@ export default function ReverseVideo() {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       video.removeEventListener('seeked', handleSeeked);
     };
-
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('seeked', handleSeeked);
     video.src = url;
@@ -44,11 +38,7 @@ export default function ReverseVideo() {
     if (ffmpegRef.current?.loaded) return ffmpegRef.current;
     const ffmpeg = new FFmpeg();
     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd';
-    
-    ffmpeg.on('progress', ({ progress }) => {
-      setProgress(Math.round(progress * 100));
-    });
-
+    ffmpeg.on('progress', ({ progress }) => { setProgress(Math.round(progress * 100)); });
     await ffmpeg.load({
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
       wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
@@ -76,26 +66,41 @@ export default function ReverseVideo() {
     }
   };
 
+  const bgClass = theme === 'dark' ? 'bg-[#0a0c10]' : 'bg-white';
+  const borderClass = theme === 'dark' ? 'border-slate-800' : 'border-slate-200';
+  const textClass = theme === 'dark' ? 'text-slate-300' : 'text-slate-600';
+  const accentClass = 'bg-red-600 hover:bg-red-700';
+
   return (
-    <div className="w-full max-w-lg flex flex-col gap-6">
+    <div className="w-full max-w-lg flex flex-col gap-6 relative">
+      <motion.div 
+          className="absolute inset-0 -z-0 opacity-10 rounded-2xl overflow-hidden"
+          style={{
+              backgroundImage: 'radial-gradient(circle at 2px 2px, #ef4444 1px, transparent 0)',
+              backgroundSize: '24px 24px'
+          }}
+          animate={{ backgroundPosition: ['0px 0px', '24px 24px'] }}
+          transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
+      />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-red-500/10 via-orange-500/10 to-transparent blur-2xl rounded-2xl" />
+
       {!videoFile ? (
-        <label className="flex flex-col items-center justify-center h-48 border border-slate-200 rounded-2xl cursor-pointer hover:border-indigo-300 transition-all bg-white shadow-sm">
+        <label className={`relative z-10 flex flex-col items-center justify-center h-48 border border-dashed rounded-2xl cursor-pointer hover:border-red-400 transition-all ${bgClass} ${borderClass}`}>
           <Upload className="w-8 h-8 text-slate-400 mb-2" />
-          <span className="text-sm text-slate-600 font-medium">Choisir une vidéo</span>
+          <span className={`text-sm ${textClass} font-medium`}>Choisir une vidéo</span>
           <input type="file" accept="video/*" className="hidden" onChange={(e) => e.target.files && setVideoFile(e.target.files[0])} />
         </label>
       ) : (
-        <div className="flex flex-col gap-6">
-          <div className="relative w-full aspect-video bg-slate-100 rounded-2xl border border-slate-200 overflow-hidden flex items-center justify-center shadow-inner">
+        <div className="relative z-10 flex flex-col gap-6">
+          <div className={`w-full aspect-video ${theme === 'dark' ? 'bg-[#050608]' : 'bg-slate-100'} rounded-2xl border ${borderClass} overflow-hidden flex items-center justify-center shadow-inner`}>
             {thumbnailUrl ? (
                 <img src={thumbnailUrl} alt="Preview" className="w-full h-full object-cover" />
             ) : (
                 <div className="animate-pulse w-full h-full bg-slate-200"></div>
             )}
-            
             {isProcessing && (
                 <motion.div 
-                    className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-indigo-500/10 to-transparent w-[200%] -left-[50%]"
+                    className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-red-500/10 to-transparent w-[200%] -left-[50%]"
                     animate={{ x: ['-25%', '25%'] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 />
@@ -103,8 +108,8 @@ export default function ReverseVideo() {
           </div>
           
           {isProcessing && (
-            <div className="w-full bg-slate-100 rounded-full h-1.5 border border-slate-200">
-              <div className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+            <div className={`w-full ${bgClass} rounded-full h-1.5 border ${borderClass}`}>
+              <div className="bg-red-600 h-1.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
             </div>
           )}
 
@@ -114,13 +119,13 @@ export default function ReverseVideo() {
               whileTap={{ scale: 0.99 }}
               onClick={handleReverse}
               disabled={isProcessing}
-              className="w-full py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md hover:bg-slate-800 transition-all"
+              className={`w-full py-3 rounded-xl ${theme === 'dark' ? 'bg-slate-800 text-white' : 'bg-slate-900 text-white'} text-sm font-semibold flex items-center justify-center gap-2 shadow-md transition-all`}
             >
               {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
               {isProcessing ? `Inversion... ${progress}%` : 'Inverser la vidéo'}
             </motion.button>
           ) : (
-            <a href={resultUrl} download="reversed.mp4" className="w-full py-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md hover:bg-indigo-700 transition-all">
+            <a href={resultUrl} download="reversed.mp4" className={`w-full py-3 rounded-xl ${accentClass} text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md transition-all`}>
               <Download className="w-4 h-4" /> Télécharger
             </a>
           )}
