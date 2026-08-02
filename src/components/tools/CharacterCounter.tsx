@@ -39,7 +39,7 @@ export default function CharacterCounter({ theme }: { theme: 'dark' | 'light' })
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Saisissez votre script ici..."
-            className={`w-full h-64 p-5 ${bgClass} border ${borderClass} rounded-2xl text-sm focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none resize-none ${textClass} transition-all duration-200 shadow-lg`}
+            className={`w-full h-64 p-5 ${bgClass} border ${borderClass} rounded-2xl text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none resize-none ${textClass} transition-all duration-200 shadow-lg`}
         />
         <button 
             onClick={handlePaste}
@@ -54,24 +54,24 @@ export default function CharacterCounter({ theme }: { theme: 'dark' | 'light' })
       <motion.div 
           className="absolute inset-0 -z-0 opacity-10 rounded-2xl overflow-hidden"
           style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, #6366f1 1px, transparent 0)',
+              backgroundImage: 'radial-gradient(circle at 2px 2px, #ef4444 1px, transparent 0)',
               backgroundSize: '24px 24px'
           }}
           animate={{ backgroundPosition: ['0px 0px', '24px 24px'] }}
           transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-indigo-500/10 via-purple-500/10 to-transparent blur-2xl rounded-2xl" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-red-500/10 via-orange-500/10 to-transparent blur-2xl rounded-2xl" />
 
       <div className="flex gap-3 text-xs font-semibold text-slate-600 z-10">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex items-center gap-2 ${bgClass} px-4 py-2 rounded-xl border ${borderClass} shadow-sm`}>
-          <Type className="w-4 h-4 text-indigo-500" />
+          <Type className="w-4 h-4 text-red-500" />
           <span>{stats.chars} caractères</span>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex items-center gap-2 ${bgClass} px-4 py-2 rounded-xl border ${borderClass} shadow-sm`}>
-          <Type className="w-4 h-4 text-indigo-500" />
+          <Type className="w-4 h-4 text-red-500" />
           <span>{stats.words} mots</span>
         </motion.div>
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex items-center gap-2 ${bgClass} px-4 py-2 rounded-xl border ${theme === 'dark' ? 'border-indigo-800' : 'border-indigo-200'} text-indigo-500 shadow-sm`}>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex items-center gap-2 ${bgClass} px-4 py-2 rounded-xl border ${theme === 'dark' ? 'border-red-900' : 'border-red-200'} text-red-600 shadow-sm`}>
           <Clock className="w-4 h-4" />
           <span>~{stats.duration} de vidéo</span>
         </motion.div>

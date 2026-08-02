@@ -71,13 +71,13 @@ export default function VideoProcessor({ theme }: { theme: 'dark' | 'light' }) {
       <motion.div 
           className="absolute inset-0 -z-0 opacity-10 rounded-2xl overflow-hidden"
           style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, #6366f1 1px, transparent 0)',
+              backgroundImage: 'radial-gradient(circle at 2px 2px, #ef4444 1px, transparent 0)',
               backgroundSize: '24px 24px'
           }}
           animate={{ backgroundPosition: ['0px 0px', '24px 24px'] }}
           transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-indigo-500/10 via-purple-500/10 to-transparent blur-2xl rounded-2xl" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-red-500/10 via-orange-500/10 to-transparent blur-2xl rounded-2xl" />
 
       {!videoFile ? (
         <label 
@@ -85,7 +85,7 @@ export default function VideoProcessor({ theme }: { theme: 'dark' | 'light' }) {
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
           className={`relative z-10 flex flex-col items-center justify-center h-48 border-2 border-dashed rounded-2xl cursor-pointer transition-all ${bgClass} ${borderClass} shadow-sm ${
-            isDragging ? 'border-indigo-400 bg-indigo-50' : 'hover:border-indigo-300'
+            isDragging ? 'border-red-400 bg-red-50' : 'hover:border-red-300'
           }`}
         >
           <Upload className="w-8 h-8 text-slate-400 mb-2" />
@@ -110,7 +110,7 @@ export default function VideoProcessor({ theme }: { theme: 'dark' | 'light' }) {
           ) : (
             <div className="flex flex-col gap-4">
               <img src={frameUrl} alt="Frame" className={`w-full aspect-video object-contain rounded-xl border ${borderClass}`} />
-              <button onClick={() => setFrameUrl(null)} className="py-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-all shadow-md">
+              <button onClick={() => setFrameUrl(null)} className="py-3 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all shadow-md">
                 Autre extraction
               </button>
             </div>
