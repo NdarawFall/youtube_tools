@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
+import Auth from '@/components/Auth';
 import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, Loader2, Moon, Sun, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -17,6 +18,7 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 3000);
@@ -60,6 +62,10 @@ export default function Home() {
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={`p-2.5 rounded-2xl border transition-all ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
+            <button onClick={() => setIsAuthModalOpen(true)} className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-medium transition-all ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-300' : 'bg-white border-slate-200 text-slate-700'}`}>
+                <User className="w-3.5 h-3.5" />
+                <span>Connexion</span>
+            </button>
         </div>
       </header>
 
@@ -91,7 +97,7 @@ export default function Home() {
             </div>
         </section>
       </div>
+      {isAuthModalOpen && <Auth theme={theme} onClose={() => setIsAuthModalOpen(false)} />}
     </main>
   );
 }
-
