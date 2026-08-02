@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
-import { RefreshCw, Upload, Download } from 'lucide-react';
+import { RefreshCw, Upload, Download, Film } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function ReverseVideo() {
@@ -51,20 +51,34 @@ export default function ReverseVideo() {
   };
 
   return (
-    <div className="w-full max-w-lg flex flex-col gap-4">
+    <div className="w-full max-w-lg flex flex-col gap-6">
       {!videoFile ? (
-        <label className="flex flex-col items-center justify-center h-48 border-2 border-dashed border-slate-800 rounded-2xl cursor-pointer hover:border-slate-600 transition-all bg-[#0a0c10]">
+        <label className="flex flex-col items-center justify-center h-48 border border-slate-800 rounded-2xl cursor-pointer hover:border-slate-600 transition-all bg-[#0a0c10]">
           <Upload className="w-8 h-8 text-slate-500 mb-2" />
           <span className="text-sm text-slate-400">Choisir une vidéo</span>
           <input type="file" accept="video/*" className="hidden" onChange={(e) => e.target.files && setVideoFile(e.target.files[0])} />
         </label>
       ) : (
-        <div className="flex flex-col gap-4">
-          <div className="text-sm text-slate-300">Vidéo chargée : {videoFile.name}</div>
+        <div className="flex flex-col gap-6">
+          <div className="relative w-full aspect-video bg-[#050608] rounded-2xl border border-slate-800 overflow-hidden flex items-center justify-center">
+            {isProcessing ? (
+                <>
+                    <Film className="w-12 h-12 text-slate-800" />
+                    {/* Scanning Line Effect */}
+                    <motion.div 
+                        className="absolute inset-0 bg-gradient-to-br from-transparent via-indigo-500/20 to-transparent w-[200%] -left-[50%]"
+                        animate={{ x: ['-25%', '25%'] }}
+                        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                    />
+                </>
+            ) : (
+                <span className="text-sm text-slate-500 truncate px-4">{videoFile.name}</span>
+            )}
+          </div>
           
           {isProcessing && (
-            <div className="w-full bg-slate-800 rounded-full h-2">
-              <div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+            <div className="w-full bg-[#0a0c10] rounded-full h-1.5 border border-slate-800">
+              <div className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
             </div>
           )}
 
@@ -74,7 +88,7 @@ export default function ReverseVideo() {
               whileTap={{ scale: 0.98 }}
               onClick={handleReverse}
               disabled={isProcessing}
-              className="w-full py-3 rounded-xl bg-indigo-600 text-white text-sm font-medium flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-white text-[#050608] text-sm font-semibold flex items-center justify-center gap-2"
             >
               {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
               {isProcessing ? `Inversion... ${progress}%` : 'Inverser la vidéo'}
