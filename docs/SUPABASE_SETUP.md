@@ -4,19 +4,22 @@
 Execute the following SQL commands in your Supabase SQL Editor:
 
 ```sql
--- Create profiles table
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid references auth.users on delete cascade not null primary key,
   email text,
   username text
 );
 
--- Enable Row Level Security (RLS)
 alter table public.profiles enable row level security;
 
--- Policy for users to view their own profile
-create policy "Users can view own profile" on public.profiles
-  for select using (auth.uid() = id);
+do $$
+begin
+  if not exists (select from pg_policies where policyname = 'Users can view own profile') then
+    create policy "Users can view own profile" on public.profiles
+      for select using (auth.uid() = id);
+  end if;
+end
+$$;
 ```
 
 ## 2. Authentication Provider
