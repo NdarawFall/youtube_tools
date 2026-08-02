@@ -2,12 +2,13 @@
 import { useState } from 'react';
 import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
-import { Video, LayoutGrid, Type } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import ReverseVideo from '@/components/tools/ReverseVideo';
+import { Video, LayoutGrid, Type, RefreshCw } from 'lucide-react';
 
 const TOOLS = [
   { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extraction d\'images HD' },
   { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Statistiques de script' },
+  { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inverser une séquence' },
 ];
 
 export default function Home() {
@@ -18,8 +19,10 @@ export default function Home() {
     switch (activeToolId) {
       case 'frame-extractor': return <VideoProcessor />;
       case 'char-counter': return <CharacterCounter />;
+      case 'reverse-video': return <ReverseVideo />;
       default: return <div className="text-center py-20 text-slate-500">Outil en développement...</div>;
     }
+  };
   };
 
   return (
