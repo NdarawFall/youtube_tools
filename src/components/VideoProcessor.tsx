@@ -10,15 +10,19 @@ export default function VideoProcessor() {
   const [frameUrl, setFrameUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('En attente...');
   const [isProcessing, setIsProcessing] = useState(false);
-  const ffmpegRef = useRef(new FFmpeg());
+  const ffmpegRef = useRef<FFmpeg>(null);
   const messageRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const loadFFmpeg = async () => {
       try {
         setStatus('Chargement de FFmpeg...');
+        
+        // Instantiate FFmpeg only on the client side
+        const ffmpeg = new FFmpeg();
+        ffmpegRef.current = ffmpeg;
+        
         const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd';
-        const ffmpeg = ffmpegRef.current;
         
         ffmpeg.on('log', ({ message }) => {
           if (messageRef.current) {
@@ -59,6 +63,8 @@ export default function VideoProcessor() {
       const inputName = `input.${extension}`;
       
       const ffmpeg = ffmpegRef.current;
+      if (!ffmpeg) throw new Error("FFmpeg non initialisé");
+
       await ffmpeg.writeFile(inputName, await fetchFile(videoFile));
 
       let ret;
