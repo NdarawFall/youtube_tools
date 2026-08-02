@@ -7,7 +7,7 @@ export default function Home() {
         <h1 className="title">Frame Extractor</h1>
         <p className="subtitle">
           Uploadez une vidéo, extrayez la première ou dernière frame grâce à FFmpeg WebAssembly, 
-          et sauvegardez-la directement dans Supabase.
+          et téléchargez l'image extraite instantanément.
         </p>
       </div>
 

@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
-import { supabase } from '@/lib/supabase';
 import { UploadCloud } from 'lucide-react';
 
 export default function VideoProcessor() {
@@ -93,39 +92,6 @@ export default function VideoProcessor() {
     }
   };
 
-  const uploadToSupabase = async () => {
-    if (!frameUrl) return;
-    setIsProcessing(true);
-    setStatus('Sauvegarde sur Supabase en cours...');
-    
-    // Si les identifiants Supabase ne sont pas fournis, on avertit l'utilisateur
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      setStatus('Erreur: Identifiants Supabase manquants dans les variables d\'environnement (.env.local)');
-      setIsProcessing(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(frameUrl);
-      const blob = await response.blob();
-      const filename = `frame_${Date.now()}.jpg`;
-
-      const { data, error } = await supabase.storage
-        .from('frames')
-        .upload(filename, blob, { contentType: 'image/jpeg' });
-
-      if (error) throw error;
-      
-      setStatus('Image sauvegardée avec succès dans le bucket "frames" !');
-    } catch (error) {
-      console.error(error);
-      const err = error as Error;
-      setStatus(`Erreur Supabase: ${err.message || 'Vérifiez la configuration RLS de votre bucket.'}`);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
   return (
     <div className="glass-card">
       {!loaded ? (
@@ -187,13 +153,14 @@ export default function VideoProcessor() {
                 >
                   Recommencer
                 </button>
-                <button 
+                <a 
                   className="btn btn-accent" 
-                  onClick={uploadToSupabase}
-                  disabled={isProcessing}
+                  href={frameUrl}
+                  download="frame.jpg"
+                  style={{ textDecoration: 'none', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
-                  Sauvegarder dans Supabase
-                </button>
+                  Télécharger l'image
+                </a>
               </div>
             </div>
           )}
