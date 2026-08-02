@@ -56,15 +56,27 @@ export default function VideoProcessor() {
     setStatus(`Extraction de la ${position === 'first' ? 'première' : 'dernière'} frame...`);
     
     try {
+      const extension = videoFile.name.split('.').pop() || 'mp4';
+      const inputName = `input.${extension}`;
+      
       const ffmpeg = ffmpegRef.current;
-      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
+      await ffmpeg.writeFile(inputName, await fetchFile(videoFile));
 
+      let ret;
       if (position === 'first') {
-        // vframes 1 prend la première image
-        await ffmpeg.exec(['-i', 'input.mp4', '-vframes', '1', '-q:v', '2', 'output.jpg']);
+        ret = await ffmpeg.exec(['-i', inputName, '-vframes', '1', '-q:v', '2', 'output.jpg']);
       } else {
-        // sseof cherche à partir de la fin de la vidéo (ici on recule de 1 seconde pour être sûr d'avoir une image, selon la vidéo)
-        await ffmpeg.exec(['-sseof', '-1', '-i', 'input.mp4', '-update', '1', '-q:v', '2', 'output.jpg']);
+        // Try getting last frame by seeking to end. If it fails (e.g. video < 1s), we could try something else, but let's stick to -0.5 to be safer for shorts
+        ret = await ffmpeg.exec(['-sseof', '-0.5', '-i', inputName, '-update', '1', '-q:v', '2', 'output.jpg']);
+        
+        // If the first attempt for the last frame fails, it might be a very short video, so we try from the beginning
+        if (ret !== 0) {
+          ret = await ffmpeg.exec(['-i', inputName, '-vframes', '1', '-q:v', '2', 'output.jpg']);
+        }
+      }
+
+      if (ret !== 0) {
+        throw new Error(`FFmpeg exited with code ${ret}`);
       }
 
       const fileData = await ffmpeg.readFile('output.jpg');
