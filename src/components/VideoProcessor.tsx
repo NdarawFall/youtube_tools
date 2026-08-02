@@ -15,32 +15,32 @@ export default function VideoProcessor() {
   const messageRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
+    const loadFFmpeg = async () => {
+      try {
+        setStatus('Chargement de FFmpeg...');
+        const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd';
+        const ffmpeg = ffmpegRef.current;
+        
+        ffmpeg.on('log', ({ message }) => {
+          if (messageRef.current) {
+            messageRef.current.innerHTML = message;
+          }
+        });
+
+        await ffmpeg.load({
+          coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+          wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+        });
+        setLoaded(true);
+        setStatus('Prêt !');
+      } catch (e) {
+        console.error(e);
+        setStatus('Erreur lors du chargement de FFmpeg. Assurez-vous d\'avoir une connexion internet.');
+      }
+    };
+
     loadFFmpeg();
   }, []);
-
-  const loadFFmpeg = async () => {
-    try {
-      setStatus('Chargement de FFmpeg...');
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd';
-      const ffmpeg = ffmpegRef.current;
-      
-      ffmpeg.on('log', ({ message }) => {
-        if (messageRef.current) {
-          messageRef.current.innerHTML = message;
-        }
-      });
-
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
-      setLoaded(true);
-      setStatus('Prêt !');
-    } catch (e) {
-      console.error(e);
-      setStatus('Erreur lors du chargement de FFmpeg. Assurez-vous d\'avoir une connexion internet.');
-    }
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -81,12 +81,13 @@ export default function VideoProcessor() {
 
       const fileData = await ffmpeg.readFile('output.jpg');
       const data = fileData as Uint8Array;
-      const url = URL.createObjectURL(new Blob([data as any], { type: 'image/jpeg' }));
+      const url = URL.createObjectURL(new Blob([data as BlobPart], { type: 'image/jpeg' }));
       setFrameUrl(url);
       setStatus('Extraction réussie !');
     } catch (error) {
       console.error(error);
-      setStatus('Erreur lors de l\'extraction. Réessayez avec une autre vidéo.');
+      const msg = error instanceof Error ? error.message : 'Erreur inconnue';
+      setStatus(`Erreur lors de l'extraction: ${msg}`);
     } finally {
       setIsProcessing(false);
     }
@@ -116,9 +117,10 @@ export default function VideoProcessor() {
       if (error) throw error;
       
       setStatus('Image sauvegardée avec succès dans le bucket "frames" !');
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      setStatus(`Erreur Supabase: ${error.message || 'Vérifiez la configuration RLS de votre bucket.'}`);
+      const err = error as Error;
+      setStatus(`Erreur Supabase: ${err.message || 'Vérifiez la configuration RLS de votre bucket.'}`);
     } finally {
       setIsProcessing(false);
     }
@@ -175,6 +177,7 @@ export default function VideoProcessor() {
 
           {frameUrl && (
             <div className="preview-container">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={frameUrl} alt="Frame extraite" className="preview-image" />
               <div className="actions-row">
                 <button 

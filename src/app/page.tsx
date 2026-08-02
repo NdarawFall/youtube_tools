@@ -14,7 +14,7 @@ export default function Home() {
       <VideoProcessor />
       
       <div style={{ marginTop: '4rem', textAlign: 'center', opacity: 0.6, fontSize: '0.9rem' }}>
-        <p>Traitement vidéo entièrement local, vos fichiers ne sont pas envoyés sur un serveur pour l'extraction.</p>
+        <p>Traitement vidéo entièrement local, vos fichiers ne sont pas envoyés sur un serveur pour l&apos;extraction.</p>
       </div>
     </main>
   );
