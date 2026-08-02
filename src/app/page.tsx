@@ -23,7 +23,6 @@ export default function Home() {
       default: return <div className="text-center py-20 text-slate-500">Outil en développement...</div>;
     }
   };
-  };
 
   return (
     <main className="h-screen w-screen bg-[#050608] text-slate-300 font-sans p-4 flex flex-col overflow-hidden">
