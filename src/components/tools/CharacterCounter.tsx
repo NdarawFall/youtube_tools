@@ -26,29 +26,29 @@ export default function CharacterCounter() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Saisissez votre script ici..."
-        className="w-full h-64 p-5 bg-[#0a0c10] border border-slate-800 rounded-2xl text-sm focus:border-slate-500 focus:ring-1 focus:ring-slate-500 outline-none resize-none text-slate-300 transition-all duration-200"
+        className="w-full h-64 p-5 bg-white border border-slate-200 rounded-2xl text-sm focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 outline-none resize-none text-slate-800 transition-all duration-200 shadow-inner"
       />
-      <div className="flex gap-3 text-xs font-medium text-slate-500">
+      <div className="flex gap-3 text-xs font-semibold text-slate-600">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 bg-[#0a0c10] px-4 py-2 rounded-xl border border-slate-800"
+          className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm"
         >
-          <Type className="w-4 h-4 text-indigo-400" />
+          <Type className="w-4 h-4 text-indigo-500" />
           <span>{stats.chars} caractères</span>
         </motion.div>
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 bg-[#0a0c10] px-4 py-2 rounded-xl border border-slate-800"
+          className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm"
         >
-          <Type className="w-4 h-4 text-indigo-400" />
+          <Type className="w-4 h-4 text-indigo-500" />
           <span>{stats.words} mots</span>
         </motion.div>
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 bg-[#0a0c10] px-4 py-2 rounded-xl border border-indigo-500/20 text-indigo-400"
+          className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-indigo-200 text-indigo-700 shadow-sm"
         >
           <Clock className="w-4 h-4" />
           <span>~{stats.duration} de vidéo</span>

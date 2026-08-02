@@ -3,7 +3,7 @@ import { useState } from 'react';
 import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
-import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft } from 'lucide-react';
+import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
@@ -26,34 +26,34 @@ export default function Home() {
   };
 
   return (
-    <main className="h-screen w-screen bg-[#050608] text-slate-300 font-sans p-4 flex flex-col overflow-hidden">
+    <main className="h-screen w-screen bg-slate-50 text-slate-900 font-sans p-4 flex flex-col overflow-hidden">
       
       {/* App Header */}
-      <header className="flex-none flex items-center justify-between pb-4">
+      <header className="flex-none flex items-center justify-between pb-6">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
-            className="p-2.5 rounded-xl bg-[#0a0c10] border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-600 transition-all active:scale-95"
+            className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-600 hover:text-slate-900 hover:border-slate-300 transition-all active:scale-95"
           >
             {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <LayoutGrid className="w-4 h-4" />}
           </button>
-          <h1 className="font-semibold text-sm tracking-tight text-white">
+          <h1 className="font-bold text-base tracking-tight text-slate-950">
             CreatorStudio
           </h1>
         </div>
       </header>
 
       {/* Main Container */}
-      <div className="flex-1 flex flex-col md:flex-row gap-4 overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row gap-6 overflow-hidden">
         
         {/* Navigation */}
         <AnimatePresence>
             {isSidebarOpen && (
             <motion.nav 
                 initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 192, opacity: 1 }}
+                animate={{ width: 220, opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
-                className="flex-none flex md:flex-col gap-1 overflow-hidden"
+                className="flex-none flex md:flex-col gap-2 overflow-hidden"
             >
                 {TOOLS.map((tool) => {
                 const Icon = tool.icon;
@@ -62,10 +62,10 @@ export default function Home() {
                     <button
                     key={tool.id}
                     onClick={() => setActiveToolId(tool.id)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm flex-1 md:flex-none ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium flex-1 md:flex-none ${
                         isActive 
-                        ? 'bg-[#0a0c10] text-white border border-slate-800' 
-                        : 'text-slate-500 hover:text-slate-300 hover:bg-[#0a0c10]/50'
+                        ? 'bg-white text-indigo-600 shadow-sm border border-slate-200' 
+                        : 'text-slate-500 hover:text-slate-900 hover:bg-white/50'
                     }`}
                     >
                     <Icon className="w-4 h-4" />
@@ -78,13 +78,13 @@ export default function Home() {
         </AnimatePresence>
 
         {/* Content Area */}
-        <section className="flex-1 bg-[#0a0c10] border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center overflow-hidden">
+        <section className="flex-1 bg-white border border-slate-200 shadow-sm rounded-3xl p-8 flex flex-col items-center justify-center overflow-hidden">
             <div className="w-full max-w-2xl flex flex-col items-center justify-center">
-                <div className="text-center mb-6">
-                    <h2 className="text-lg font-semibold text-white mb-1">
+                <div className="text-center mb-10">
+                    <h2 className="text-2xl font-bold text-slate-950 mb-2">
                         {TOOLS.find(t => t.id === activeToolId)?.name}
                     </h2>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-sm text-slate-500">
                         {TOOLS.find(t => t.id === activeToolId)?.description}
                     </p>
                 </div>

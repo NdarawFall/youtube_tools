@@ -13,21 +13,31 @@ export default function ReverseVideo() {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
 
-  // Extract thumbnail
+  // Robust thumbnail extraction
   useEffect(() => {
     if (!videoFile) return;
     const url = URL.createObjectURL(videoFile);
     const video = document.createElement('video');
-    video.src = url;
-    video.currentTime = 0.1;
-    video.onseeked = () => {
+    
+    const handleLoadedMetadata = () => {
+        video.currentTime = 1; // Seek to 1s to avoid black frames at 0s
+    };
+    
+    const handleSeeked = () => {
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       canvas.getContext('2d')?.drawImage(video, 0, 0);
       setThumbnailUrl(canvas.toDataURL('image/jpeg'));
       URL.revokeObjectURL(url);
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('seeked', handleSeeked);
     };
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('seeked', handleSeeked);
+    video.src = url;
+    video.load();
   }, [videoFile]);
 
   const initFFmpeg = async () => {
@@ -69,19 +79,23 @@ export default function ReverseVideo() {
   return (
     <div className="w-full max-w-lg flex flex-col gap-6">
       {!videoFile ? (
-        <label className="flex flex-col items-center justify-center h-48 border border-slate-800 rounded-2xl cursor-pointer hover:border-slate-600 transition-all bg-[#0a0c10]">
-          <Upload className="w-8 h-8 text-slate-500 mb-2" />
-          <span className="text-sm text-slate-400">Choisir une vidéo</span>
+        <label className="flex flex-col items-center justify-center h-48 border border-slate-200 rounded-2xl cursor-pointer hover:border-indigo-300 transition-all bg-white shadow-sm">
+          <Upload className="w-8 h-8 text-slate-400 mb-2" />
+          <span className="text-sm text-slate-600 font-medium">Choisir une vidéo</span>
           <input type="file" accept="video/*" className="hidden" onChange={(e) => e.target.files && setVideoFile(e.target.files[0])} />
         </label>
       ) : (
         <div className="flex flex-col gap-6">
-          <div className="relative w-full aspect-video bg-black rounded-2xl border border-slate-800 overflow-hidden flex items-center justify-center shadow-2xl">
-            {thumbnailUrl && <img src={thumbnailUrl} alt="Preview" className="w-full h-full object-cover opacity-80" />}
+          <div className="relative w-full aspect-video bg-slate-100 rounded-2xl border border-slate-200 overflow-hidden flex items-center justify-center shadow-inner">
+            {thumbnailUrl ? (
+                <img src={thumbnailUrl} alt="Preview" className="w-full h-full object-cover" />
+            ) : (
+                <div className="animate-pulse w-full h-full bg-slate-200"></div>
+            )}
             
             {isProcessing && (
                 <motion.div 
-                    className="absolute inset-0 bg-gradient-to-br from-indigo-500/30 via-indigo-500/10 to-transparent w-[200%] -left-[50%]"
+                    className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-indigo-500/10 to-transparent w-[200%] -left-[50%]"
                     animate={{ x: ['-25%', '25%'] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 />
@@ -89,24 +103,24 @@ export default function ReverseVideo() {
           </div>
           
           {isProcessing && (
-            <div className="w-full bg-[#0a0c10] rounded-full h-1.5 border border-slate-800">
-              <div className="bg-indigo-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+            <div className="w-full bg-slate-100 rounded-full h-1.5 border border-slate-200">
+              <div className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
             </div>
           )}
 
           {!resultUrl ? (
             <motion.button 
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               onClick={handleReverse}
               disabled={isProcessing}
-              className="w-full py-3 rounded-xl bg-white text-[#050608] text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-white/5"
+              className="w-full py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md hover:bg-slate-800 transition-all"
             >
               {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
               {isProcessing ? `Inversion... ${progress}%` : 'Inverser la vidéo'}
             </motion.button>
           ) : (
-            <a href={resultUrl} download="reversed.mp4" className="w-full py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium flex items-center justify-center gap-2">
+            <a href={resultUrl} download="reversed.mp4" className="w-full py-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md hover:bg-indigo-700 transition-all">
               <Download className="w-4 h-4" /> Télécharger
             </a>
           )}
