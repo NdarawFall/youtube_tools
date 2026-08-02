@@ -37,9 +37,9 @@ export default function Home() {
       <div className={`h-screen w-screen flex flex-col items-center justify-center gap-6 ${theme === 'dark' ? 'bg-[#050608] text-white' : 'bg-slate-50 text-slate-950'}`}>
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center gap-4">
           <div className={`p-4 rounded-3xl ${theme === 'dark' ? 'bg-[#0a0c10]' : 'bg-white'} border ${theme === 'dark' ? 'border-slate-800' : 'border-slate-200'} shadow-2xl`}>
-             <LayoutGrid className="w-8 h-8 text-indigo-500" />
+             <LayoutGrid className="w-8 h-8 text-red-500" />
           </div>
-          <h1 className="font-bold text-2xl tracking-tighter">CreatorStudio</h1>
+          <h1 className="font-bold text-2xl tracking-tighter">Creator<span className="text-red-500 italic">Studio</span></h1>
         </motion.div>
         <Loader2 className="w-6 h-6 animate-spin opacity-50" />
       </div>
@@ -54,7 +54,7 @@ export default function Home() {
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className={`p-2.5 rounded-2xl border transition-all active:scale-95 ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
             {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <LayoutGrid className="w-4 h-4" />}
           </button>
-          <h1 className="font-bold text-base tracking-tight">CreatorStudio</h1>
+          <h1 className="font-bold text-base tracking-tight">Creator<span className="text-red-500 italic">Studio</span></h1>
         </div>
         <div className="flex items-center gap-3">
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={`p-2.5 rounded-2xl border transition-all ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
@@ -75,7 +75,7 @@ export default function Home() {
                 const Icon = tool.icon;
                 const isActive = activeToolId === tool.id;
                 return (
-                    <button key={tool.id} onClick={() => setActiveToolId(tool.id)} className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all text-sm font-semibold flex-1 md:flex-none ${isActive ? (theme === 'dark' ? 'bg-[#0a0c10] text-indigo-400 border border-slate-800' : 'bg-white text-indigo-600 border border-slate-200 shadow-sm') : (theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-900')}`}>
+                    <button key={tool.id} onClick={() => setActiveToolId(tool.id)} className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all text-sm font-semibold flex-1 md:flex-none ${isActive ? (theme === 'dark' ? 'bg-[#0a0c10] text-red-500 border border-slate-800' : 'bg-white text-red-600 border border-slate-200 shadow-sm') : (theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-900')}`}>
                     <Icon className="w-4 h-4" />
                     {tool.name}
                     </button>
