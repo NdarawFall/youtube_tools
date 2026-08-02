@@ -26,14 +26,14 @@ export default function Home() {
   };
 
   return (
-    <main className="h-screen w-screen bg-slate-50 text-slate-900 font-sans p-4 flex flex-col overflow-hidden">
+    <main className="h-screen w-screen bg-slate-50 text-slate-800 font-sans p-4 flex flex-col overflow-hidden">
       
       {/* App Header */}
       <header className="flex-none flex items-center justify-between pb-6">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
-            className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-600 hover:text-slate-900 hover:border-slate-300 transition-all active:scale-95"
+            className="p-2.5 rounded-2xl bg-white border border-slate-200/60 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.07)] flex items-center justify-center text-slate-500 hover:text-indigo-600 transition-all active:scale-95"
           >
             {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <LayoutGrid className="w-4 h-4" />}
           </button>
@@ -62,10 +62,10 @@ export default function Home() {
                     <button
                     key={tool.id}
                     onClick={() => setActiveToolId(tool.id)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium flex-1 md:flex-none ${
+                    className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all text-sm font-semibold flex-1 md:flex-none ${
                         isActive 
-                        ? 'bg-white text-indigo-600 shadow-sm border border-slate-200' 
-                        : 'text-slate-500 hover:text-slate-900 hover:bg-white/50'
+                        ? 'bg-white text-indigo-600 shadow-[0_4px_20px_-5px_rgba(79,70,229,0.15)] border border-indigo-100' 
+                        : 'text-slate-500 hover:text-slate-900'
                     }`}
                     >
                     <Icon className="w-4 h-4" />
@@ -78,13 +78,13 @@ export default function Home() {
         </AnimatePresence>
 
         {/* Content Area */}
-        <section className="flex-1 bg-white border border-slate-200 shadow-sm rounded-3xl p-8 flex flex-col items-center justify-center overflow-hidden">
+        <section className="flex-1 bg-gradient-to-br from-white to-slate-50 border border-slate-200/60 shadow-xl shadow-slate-200/30 rounded-3xl p-8 flex flex-col items-center justify-center overflow-hidden">
             <div className="w-full max-w-2xl flex flex-col items-center justify-center">
                 <div className="text-center mb-10">
-                    <h2 className="text-2xl font-bold text-slate-950 mb-2">
+                    <h2 className="text-2xl font-extrabold text-slate-950 mb-2">
                         {TOOLS.find(t => t.id === activeToolId)?.name}
                     </h2>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-600">
                         {TOOLS.find(t => t.id === activeToolId)?.description}
                     </p>
                 </div>
