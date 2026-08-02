@@ -25,9 +25,9 @@ export default function Home() {
 
   const renderTool = () => {
     switch (activeToolId) {
-      case 'frame-extractor': return <VideoProcessor />;
-      case 'char-counter': return <CharacterCounter />;
-      case 'reverse-video': return <ReverseVideo />;
+      case 'frame-extractor': return <VideoProcessor theme={theme} />;
+      case 'char-counter': return <CharacterCounter theme={theme} />;
+      case 'reverse-video': return <ReverseVideo theme={theme} />;
       default: return <div className="text-center py-20 opacity-50">Outil en développement...</div>;
     }
   };
