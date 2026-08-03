@@ -27,5 +27,6 @@ $$;
 2. Navigate to **Authentication** > **Providers**.
 3. Enable the **Email** provider.
 4. Navigate to **Authentication** > **URL Configuration**.
+
 5. Set the **Site URL** to your production/local URL (e.g., `http://localhost:3000`).
 6. Set the **Redirect URLs** to `http://localhost:3000/auth/callback` (add your production URL here as well).

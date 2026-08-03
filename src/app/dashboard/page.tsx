@@ -4,7 +4,7 @@ import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
 import { supabase } from '@/lib/supabase';
-import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User } from 'lucide-react';
+import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
@@ -13,17 +13,17 @@ const TOOLS = [
   { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inverser une séquence' },
 ];
 
-export default function Dashboard({ theme }: { theme: 'dark' | 'light' }) {
+export default function Dashboard() {
   const [activeToolId, setActiveToolId] = useState('frame-extractor');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     const fetchUser = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-            const { data: profile } = await supabase.from('profiles').select('username').eq('id', user.id).single();
-            setUser({ ...user, username: profile?.username });
+            setUser({ ...user, username: user.user_metadata.username || 'Utilisateur' });
         }
     };
     fetchUser();
@@ -54,6 +54,9 @@ export default function Dashboard({ theme }: { theme: 'dark' | 'light' }) {
           <h1 className="font-bold text-base tracking-tight">Creator<span className="text-red-500 italic">Studio</span></h1>
         </div>
         <div className="flex items-center gap-3">
+            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={`p-2.5 rounded-2xl border transition-all ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
+                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
             <div className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-medium ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-300' : 'bg-white border-slate-200 text-slate-700'}`}>
                 <User className="w-3.5 h-3.5" />
                 <span>{user?.username || 'Utilisateur'}</span>
