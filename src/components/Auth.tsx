@@ -18,19 +18,22 @@ export default function Auth({ theme, onClose }: { theme: 'dark' | 'light', onCl
       const { data, error } = await supabase.auth.signUp({ 
           email, 
           password,
-          options: { data: { username } } 
+          options: { data: { username }, emailRedirectTo: `${window.location.origin}/auth/callback` } 
       });
-      if (error) alert(error.message);
+      if (error) alert(`Erreur d'inscription : ${error.message}`);
       else {
         if (data.user) {
             await supabase.from('profiles').insert([{ id: data.user.id, email, username }]);
         }
-        alert('Compte créé, vérifiez vos emails.');
+        alert('Compte créé ! Veuillez vérifier vos emails pour confirmer votre adresse avant de vous connecter.');
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) alert(error.message);
-      else onClose();
+      if (error) alert(`Erreur de connexion : ${error.message}`);
+      else {
+          onClose();
+          window.location.href = '/dashboard';
+      }
     }
     setLoading(false);
   };
