@@ -24,7 +24,7 @@ export default function VideoProcessor({ theme }: { theme: 'dark' | 'light' }) {
     setStatus(`Vidéo : ${file.name}`);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setIsDragging(false);
     if (e.dataTransfer.files?.length) handleFile(e.dataTransfer.files[0]);
@@ -81,7 +81,7 @@ export default function VideoProcessor({ theme }: { theme: 'dark' | 'light' }) {
 
       {!videoFile ? (
         <label 
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragOver={(e: React.DragEvent<HTMLLabelElement>) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
           className={`relative z-10 flex flex-col items-center justify-center h-48 border-2 border-dashed rounded-2xl cursor-pointer transition-all ${bgClass} ${borderClass} shadow-sm ${
