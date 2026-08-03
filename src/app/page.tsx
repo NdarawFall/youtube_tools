@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Auth from '@/components/Auth';
 import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Layers, Palette } from 'lucide-react';
+import { ArrowRight, Zap, Layers, Palette, Video, Type, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LandingPage() {
@@ -23,9 +23,23 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#050608] text-slate-200 font-sans selection:bg-red-500/30">
+    <main className="min-h-screen bg-[#050608] text-slate-200 font-sans selection:bg-red-500/30 overflow-hidden relative">
+      
+      {/* Animated Background Mesh */}
+      <motion.div 
+        className="absolute inset-0 -z-10"
+        animate={{
+            background: [
+                'radial-gradient(circle at 20% 30%, #ef444420, transparent)',
+                'radial-gradient(circle at 80% 70%, #4f46e520, transparent)',
+                'radial-gradient(circle at 50% 50%, #ef444410, transparent)',
+            ]
+        }}
+        transition={{ duration: 15, repeat: Infinity, repeatType: "reverse" }}
+      />
+
       {/* Navbar */}
-      <nav className="fixed w-full z-50 px-8 py-6 flex items-center justify-between">
+      <nav className="fixed w-full z-50 px-8 py-6 flex items-center justify-between backdrop-blur-sm border-b border-white/5">
         <h1 className="font-bold text-xl tracking-tight text-white">Creator<span className="text-red-500 italic">Studio</span></h1>
         {session ? (
             <Link href="/dashboard" className="px-5 py-2.5 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all">
@@ -39,7 +53,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-8 text-center">
+      <section className="relative pt-32 pb-20 px-8 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="px-4 py-1.5 rounded-full bg-red-950 text-red-400 text-xs font-bold uppercase tracking-wider mb-6 inline-block border border-red-900/50">
                 Pour les créateurs Faceless
@@ -62,6 +76,10 @@ export default function LandingPage() {
                 </button>
             )}
         </motion.div>
+
+        {/* Floating Icons */}
+        <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute top-1/4 left-10 text-red-500/20"><Video className="w-20 h-20" /></motion.div>
+        <motion.div animate={{ y: [0, 20, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-1/4 right-10 text-red-500/20"><Type className="w-20 h-20" /></motion.div>
       </section>
 
       {/* Features Grid */}
@@ -71,7 +89,7 @@ export default function LandingPage() {
             { icon: Layers, title: "Flux Structuré", desc: "De l'idée au montage, tout est centralisé." },
             { icon: Palette, title: "Design Uniforme", desc: "Une charte visuelle forte pour votre identité." }
         ].map((f, i) => (
-            <div key={i} className="p-8 rounded-3xl bg-[#0a0c10] border border-slate-800 hover:border-red-900/50 transition-colors">
+            <div key={i} className="p-8 rounded-3xl bg-[#0a0c10] border border-slate-800 hover:border-red-900/50 transition-colors shadow-2xl">
                 <f.icon className="w-10 h-10 text-red-500 mb-6" />
                 <h3 className="text-xl font-bold text-white mb-3">{f.title}</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
