@@ -3,14 +3,16 @@ import { useState, useEffect } from 'react';
 import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
+import TodoList from '@/components/tools/TodoList';
 import { supabase } from '@/lib/supabase';
-import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun } from 'lucide-react';
+import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun, ListTodo } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
   { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extraction d\'images HD' },
   { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Statistiques de script' },
   { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inverser une séquence' },
+  { id: 'todo-list', name: 'Todo List', icon: ListTodo, description: 'Gestion des tâches interactives' },
 ];
 
 export default function Dashboard() {
@@ -39,6 +41,7 @@ export default function Dashboard() {
       case 'frame-extractor': return <VideoProcessor theme={theme} />;
       case 'char-counter': return <CharacterCounter theme={theme} />;
       case 'reverse-video': return <ReverseVideo theme={theme} />;
+      case 'todo-list': return <TodoList theme={theme} />;
       default: return <div className="text-center py-20 opacity-50">Outil en développement...</div>;
     }
   };
