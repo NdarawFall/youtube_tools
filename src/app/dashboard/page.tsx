@@ -21,7 +21,22 @@ const TOOLS = [
 export default function Dashboard() {
   const [activeToolId, setActiveToolId] = useState('youtube-kanban');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [user, setUser] = useState<DashboardUser | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const theme = 'dark';
+
+  useEffect(() => {
+    const fetchUser = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            setUser({ ...user, username: user.user_metadata.username || 'Utilisateur' });
+            // Fetch avatar from profiles table
+            const { data: profile } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
+            if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
+        }
+    };
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -51,9 +66,19 @@ export default function Dashboard() {
             Creator<span className="text-red-500 italic">Studio</span>
           </div>
         </div>
-        <button onClick={handleLogout} className="flex items-center gap-2 p-2.5 rounded-2xl text-red-500 hover:bg-red-50 transition-colors">
-            <LogOut className="w-4 h-4" /> Deconnexion
-        </button>
+        <div className="flex items-center gap-3">
+            <div className={`flex items-center gap-2 px-3 py-2 rounded-2xl border text-xs font-medium border-slate-800 bg-[#0a0c10] text-slate-300`}>
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="avatar" className="w-6 h-6 rounded-full object-cover ring-1 ring-red-500/50" />
+                ) : (
+                  <User className="w-3.5 h-3.5" />
+                )}
+                <span>{user?.username || 'Utilisateur'}</span>
+            </div>
+            <button onClick={handleLogout} className="flex items-center gap-2 p-2.5 rounded-2xl text-red-500 hover:bg-red-50 transition-colors">
+                <LogOut className="w-4 h-4" /> Deconnexion
+            </button>
+        </div>
       </header>
 
       <div className="flex-1 flex gap-6 overflow-hidden">
