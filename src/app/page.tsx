@@ -23,7 +23,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#050608] text-slate-200 font-sans selection:bg-red-500/30 overflow-hidden relative">
+    <main className="min-h-screen bg-[#050608] text-slate-200 font-sans selection:bg-red-500/30 overflow-x-hidden relative">
       
       {/* Animated Background Mesh */}
       <div className="absolute inset-0 z-0">
@@ -157,6 +157,56 @@ export default function LandingPage() {
             </div>
         </div>
       </section>
+
+      {/* How it works Section */}
+      <section className="py-24 px-8 relative z-10 bg-[#050608]">
+        <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-5xl font-bold mb-4">Comment ça <span className="text-red-500 italic">marche ?</span></h2>
+                <p className="text-slate-400 text-lg">Un processus fluide, de la conception à la mise en ligne.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-12 relative">
+                <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-red-900/0 via-red-500/20 to-red-900/0 -z-10"></div>
+                {[
+                    { step: "01", title: "Centralisez", desc: "Notez toutes vos idées de vidéos dans le Kanban. Fini les post-its perdus ou les blocs-notes éparpillés." },
+                    { step: "02", title: "Produisez", desc: "Faites glisser vos cartes étape par étape : Script, Voix-Off, Montage. Suivez votre progression visuellement." },
+                    { step: "03", title: "Extrayez & Publiez", desc: "Générez vos miniatures grâce à l'extracteur de frames intégré. Votre vidéo est prête à exploser l'algorithme." }
+                ].map((s, i) => (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.2 }}
+                        key={i} className="flex flex-col items-center text-center relative"
+                    >
+                        <div className="w-16 h-16 rounded-full bg-[#0a0c10] border-2 border-red-500/30 text-red-500 flex items-center justify-center text-2xl font-black mb-6 shadow-[0_0_30px_-5px_rgba(239,68,68,0.3)]">
+                            {s.step}
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-3">{s.title}</h3>
+                        <p className="text-slate-400 text-sm leading-relaxed">{s.desc}</p>
+                    </motion.div>
+                ))}
+            </div>
+        </div>
+      </section>
+
+      {/* Target Audience Section */}
+      <section className="py-24 px-8 border-t border-white/5 bg-[#0a0c10] z-10 relative">
+        <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Fait pour les <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">Créateurs Ambitieux</span></h2>
+            <p className="text-slate-400 text-lg mb-12">
+                Que vous soyez un créateur "Faceless" gérant plusieurs chaînes automatisées, ou un YouTubeur classique cherchant à structurer sa production hebdomadaire, CreatorStudio est le tableau de bord qu'il vous manquait.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+                <span className="px-6 py-3 rounded-full bg-slate-900 border border-slate-800 text-sm font-medium">Chaînes d'automatisation</span>
+                <span className="px-6 py-3 rounded-full bg-slate-900 border border-slate-800 text-sm font-medium">Créateurs Solo</span>
+                <span className="px-6 py-3 rounded-full bg-slate-900 border border-slate-800 text-sm font-medium">Monteurs Vidéos freelances</span>
+            </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-8 border-t border-white/5 bg-[#050608] text-center text-slate-500 text-sm relative z-10">
+          <p>© {new Date().getFullYear()} CreatorStudio. Tous droits réservés.</p>
+      </footer>
 
       {isAuthModalOpen && <Auth theme="dark" onClose={() => setIsAuthModalOpen(false)} />}
     </main>
