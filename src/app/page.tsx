@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import Auth from '@/components/Auth';
 import { supabase } from '@/lib/supabase';
-import { motion } from 'framer-motion';
+import { Session } from '@supabase/supabase-js';
+import { motion, Variants } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 
@@ -24,15 +25,15 @@ const PAIN_POINTS = [
   },
 ];
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] } }),
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } }),
 };
 
 export default function LandingPage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authInitialMode, setAuthInitialMode] = useState<'login' | 'signup-avatar'>('login');
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   const openLogin = () => { setAuthInitialMode('login'); setIsAuthModalOpen(true); };
   const openSignup = () => { setAuthInitialMode('signup-avatar'); setIsAuthModalOpen(true); };
@@ -94,7 +95,7 @@ export default function LandingPage() {
             >
               Créer sans système,<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-br from-red-500 via-orange-400 to-red-600">
-                c'est perdre du temps.
+                {"c'est perdre du temps."}
               </span>
             </motion.h1>
 
@@ -201,7 +202,7 @@ export default function LandingPage() {
             variants={fadeUp} custom={2}
             className="text-lg text-slate-400 leading-relaxed mb-12 max-w-2xl mx-auto"
           >
-            CreatorStudio centralise chaque étape de votre production — de l'étincelle initiale à la vidéo publiée — dans un espace pensé exclusivement pour les créateurs anonymes qui veulent scaler sans se noyer.
+            {"CreatorStudio centralise chaque étape de votre production — de l'étincelle initiale à la vidéo publiée — dans un espace pensé exclusivement pour les créateurs anonymes qui veulent scaler sans se noyer."}
           </motion.p>
 
           {/* Quote / Statement */}
@@ -210,10 +211,10 @@ export default function LandingPage() {
             variants={fadeUp} custom={3}
             className="relative px-10 py-8 rounded-3xl bg-white/[0.03] border border-white/[0.08]"
           >
-            <div className="text-5xl text-red-500/30 font-serif absolute top-4 left-6 leading-none select-none">"</div>
+            <div className="text-5xl text-red-500/30 font-serif absolute top-4 left-6 leading-none select-none">{"\""}</div>
             <p className="text-xl md:text-2xl font-semibold text-slate-200 italic leading-relaxed">
-              Les meilleures chaînes Faceless ne gagnent pas parce qu'elles ont plus de talent.
-              Elles gagnent parce qu'elles ont un meilleur système.
+              {"Les meilleures chaînes Faceless ne gagnent pas parce qu'elles ont plus de talent."}
+              {"Elles gagnent parce qu'elles ont un meilleur système."}
             </p>
           </motion.blockquote>
         </div>

@@ -252,7 +252,7 @@ export default function Auth({ theme, onClose, initialMode = 'login' }: { theme:
                 </div>
                 <div>
                   <h2 className={`text-xl font-extrabold ${textClass}`}>Vos Informations</h2>
-                  <p className="text-slate-500 text-xs">Plus qu'une étape !</p>
+                  <p className="text-slate-500 text-xs">{"Plus qu'une étape !"}</p>
                 </div>
               </div>
 
@@ -290,7 +290,7 @@ export default function Auth({ theme, onClose, initialMode = 'login' }: { theme:
               </form>
 
               <button onClick={() => setMode('signup-avatar')} className="w-full mt-3 py-2.5 text-sm text-slate-500 hover:text-slate-300 transition-colors">
-                ← Changer d'avatar
+                {"← Changer d'avatar"}
               </button>
             </motion.div>
           )}

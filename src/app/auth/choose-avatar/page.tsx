@@ -66,7 +66,7 @@ export default function ChooseAvatarPage() {
       >
         <div className="text-center">
           <h1 className="text-3xl font-black text-white mb-2">Choisissez votre avatar</h1>
-          <p className="text-slate-500 text-sm">Une dernière étape avant d'accéder à votre studio.</p>
+          <p className="text-slate-500 text-sm">{"Une dernière étape avant d'accéder à votre studio."}</p>
         </div>
 
         {/* Avatar Selection */}
@@ -101,7 +101,7 @@ export default function ChooseAvatarPage() {
 
         {/* Username field */}
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Nom d'utilisateur</label>
+          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{"Nom d'utilisateur"}</label>
           <input
             type="text"
             value={username}

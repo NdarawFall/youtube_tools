@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Edit2, GripVertical, Check, X } from 'lucide-react';
@@ -40,11 +40,7 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
   const borderClass = theme === 'dark' ? 'border-slate-800' : 'border-slate-200';
   const textClass = theme === 'dark' ? 'text-slate-300' : 'text-slate-800';
 
-  useEffect(() => {
-    fetchVideos();
-  }, []);
-
-  const fetchVideos = async () => {
+  const fetchVideos = useCallback(async () => {
     setIsLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -60,7 +56,12 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
       }
     }
     setIsLoading(false);
-  };
+  }, []);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchVideos();
+  }, [fetchVideos]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,7 +200,8 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
                       exit={{ opacity: 0, scale: 0.9 }}
                       key={video.id}
                       draggable
-                      onDragStart={(e: any) => handleDragStart(e, video)}
+                      // @ts-ignore
+                      onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, video)}
                       className={`group relative p-4 rounded-xl border ${borderClass} ${bgClass} shadow-sm cursor-grab active:cursor-grabbing hover:border-red-500/50 transition-colors`}
                     >
                         {editingId === video.id ? (

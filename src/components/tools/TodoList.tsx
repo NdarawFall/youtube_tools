@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Reorder, AnimatePresence } from 'framer-motion';
 import { Plus, GripVertical, Trash2, Edit2, Check } from 'lucide-react';
@@ -25,11 +25,7 @@ export default function TodoList({ theme }: { theme: 'dark' | 'light' }) {
   const textClass = theme === 'dark' ? 'text-slate-300' : 'text-slate-800';
   const inputBgClass = theme === 'dark' ? 'bg-[#050608]' : 'bg-slate-50';
 
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     setIsLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -45,7 +41,12 @@ export default function TodoList({ theme }: { theme: 'dark' | 'light' }) {
       }
     }
     setIsLoading(false);
-  };
+  }, []);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchTodos();
+  }, [fetchTodos]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();

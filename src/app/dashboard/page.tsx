@@ -7,6 +7,7 @@ import ReverseVideo from '@/components/tools/ReverseVideo';
 import TodoList from '@/components/tools/TodoList';
 import KanbanBoard from '@/components/tools/KanbanBoard';
 import { supabase } from '@/lib/supabase';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun, ListTodo, Film } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,10 +19,14 @@ const TOOLS = [
   { id: 'todo-list', name: 'Todo List', icon: ListTodo, description: 'Gestion des tâches interactives' },
 ];
 
+interface DashboardUser extends SupabaseUser {
+  username?: string;
+}
+
 export default function Dashboard() {
   const [activeToolId, setActiveToolId] = useState('youtube-kanban');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<DashboardUser | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
