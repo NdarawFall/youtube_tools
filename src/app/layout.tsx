@@ -24,6 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          if (window.innerWidth < 1024 && 'ontouchstart' in window) {
+            if (window.location.pathname !== '/mobile-restricted') {
+              window.location.href = '/mobile-restricted';
+            }
+          }
+        `}} />
+      </head>
       <body>{children}</body>
     </html>
   );
