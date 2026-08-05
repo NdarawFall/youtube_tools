@@ -18,6 +18,7 @@ const COLUMNS = [
   { id: 'voiceover', title: '🎙️ Voix-Off' },
   { id: 'assets', title: '🖼️ Assets' },
   { id: 'editing', title: '✂️ Montage' },
+  { id: 'music', title: '🎵 Musique' },
   { id: 'publication', title: '🚀 Publication' },
 ];
 
@@ -147,21 +148,21 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
       <div className="flex justify-end items-center w-full shrink-0">
         {!isAdding ? (
             <button onClick={() => setIsAdding(true)} className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-all shadow-md flex items-center gap-2 text-sm">
-                <Plus className="w-4 h-4" /> Nouvelle Vidéo
+                <Plus className="w-4 h-4" /> Nouvelle Tâche
             </button>
         ) : (
-            <form onSubmit={handleAdd} className="flex gap-2">
+            <form onSubmit={handleAdd} className="flex gap-2 items-center">
                 <input 
                     type="text" autoFocus
                     value={newTitle} onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="Titre de la vidéo..."
-                    className={`px-4 py-2 rounded-xl border ${borderClass} ${bgClass} ${textClass} outline-none focus:border-red-500 text-sm w-64`}
+                    placeholder="Ajouter une tâche..."
+                    className={`px-4 py-2.5 rounded-xl border ${borderClass} ${bgClass} ${textClass} outline-none focus:border-red-500 text-sm w-72`}
                 />
-                <button type="submit" disabled={!newTitle.trim()} className="p-2 rounded-xl bg-red-600 text-white hover:bg-red-700 disabled:opacity-50">
-                    <Check className="w-4 h-4" />
+                <button type="submit" disabled={!newTitle.trim()} className="px-4 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 text-sm shadow-md transition-all">
+                    <Check className="w-4 h-4" /> OK
                 </button>
-                <button type="button" onClick={() => setIsAdding(false)} className="p-2 rounded-xl bg-slate-600 text-white hover:bg-slate-700">
-                    <X className="w-4 h-4" />
+                <button type="button" onClick={() => setIsAdding(false)} className="px-4 py-2.5 rounded-xl bg-slate-700 text-white font-semibold hover:bg-slate-600 flex items-center gap-1.5 text-sm shadow-md transition-all">
+                    <X className="w-4 h-4" /> Annuler
                 </button>
             </form>
         )}
@@ -190,7 +191,7 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
               {/* Column Content */}
               <div className="p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[150px]">
                 <AnimatePresence>
-                  {columnVideos.map(video => (
+                  {columnVideos.map((video, index) => (
                     <motion.div
                       layout
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -212,8 +213,14 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
                             </div>
                         ) : (
                             <div className="flex items-start justify-between gap-2">
-                                <span className={`text-sm font-medium leading-tight ${textClass}`}>{video.title}</span>
-                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="flex items-start gap-2.5 min-w-0">
+                                    {/* Position number */}
+                                    <span className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 ${
+                                        theme === 'dark' ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'
+                                    }`}>{index + 1}</span>
+                                    <span className={`text-sm font-medium leading-tight ${textClass}`}>{video.title}</span>
+                                </div>
+                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                                     <button onClick={() => startEditing(video)} className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
                                         <Edit2 className="w-3 h-3" />
                                     </button>
