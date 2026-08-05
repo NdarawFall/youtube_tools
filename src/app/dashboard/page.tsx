@@ -91,12 +91,14 @@ export default function Dashboard() {
             )}
         </AnimatePresence>
 
-        <section className={`flex-1 rounded-3xl p-8 flex flex-col items-center justify-center overflow-hidden border transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/30'}`}>
-            <div className="w-full max-w-2xl flex flex-col items-center justify-center">
-                <div className="text-center mb-10">
-                    <h2 className="text-2xl font-extrabold mb-2">{TOOLS.find(t => t.id === activeToolId)?.name}</h2>
+        <section className={`flex-1 rounded-3xl p-6 md:p-8 flex flex-col overflow-hidden border transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/30'}`}>
+            <div className="w-full h-full flex flex-col overflow-hidden">
+                <div className="mb-6 flex-none">
+                    <h2 className="text-2xl font-extrabold">{TOOLS.find(t => t.id === activeToolId)?.name}</h2>
                 </div>
-                <div className="w-full flex justify-center">{renderTool()}</div>
+                <div className="w-full flex-1 overflow-hidden flex justify-center">
+                    {renderTool()}
+                </div>
             </div>
         </section>
       </div>

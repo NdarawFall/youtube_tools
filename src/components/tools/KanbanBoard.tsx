@@ -144,11 +144,7 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
   return (
     <div className="w-full flex flex-col gap-6 h-full min-h-[600px] overflow-hidden">
       {/* Header Actions */}
-      <div className="flex justify-between items-center w-full shrink-0">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-            <span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>Studio Kanban</span>
-        </h2>
-        
+      <div className="flex justify-end items-center w-full shrink-0">
         {!isAdding ? (
             <button onClick={() => setIsAdding(true)} className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-all shadow-md flex items-center gap-2 text-sm">
                 <Plus className="w-4 h-4" /> Nouvelle Vidéo
