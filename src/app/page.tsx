@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Auth from '@/components/Auth';
 import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
-import { ArrowRight, LayoutDashboard, ListTodo, Video, Type, CheckCircle2, Youtube } from 'lucide-react';
+import { ArrowRight, LayoutDashboard, ListTodo, Video, Type, CheckCircle2, Film } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LandingPage() {
@@ -40,7 +40,7 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="fixed w-full z-50 px-8 py-6 flex items-center justify-between backdrop-blur-md border-b border-white/5 bg-[#050608]/50">
         <h1 className="font-bold text-xl tracking-tight text-white flex items-center gap-2">
-            <Youtube className="w-6 h-6 text-red-500" />
+            <Film className="w-6 h-6 text-red-500" />
             Creator<span className="text-red-500 italic">Studio</span>
         </h1>
         {session ? (

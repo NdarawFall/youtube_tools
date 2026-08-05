@@ -6,11 +6,11 @@ import ReverseVideo from '@/components/tools/ReverseVideo';
 import TodoList from '@/components/tools/TodoList';
 import KanbanBoard from '@/components/tools/KanbanBoard';
 import { supabase } from '@/lib/supabase';
-import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun, ListTodo, Youtube } from 'lucide-react';
+import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun, ListTodo, Film } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
-  { id: 'youtube-kanban', name: 'YouTube Studio', icon: Youtube, description: 'Kanban pour créateurs' },
+  { id: 'youtube-kanban', name: 'YouTube Studio', icon: Film, description: 'Kanban pour créateurs' },
   { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extraction d\'images HD' },
   { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Statistiques de script' },
   { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inverser une séquence' },
