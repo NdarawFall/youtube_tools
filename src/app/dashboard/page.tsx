@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
@@ -57,7 +58,7 @@ export default function Dashboard() {
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className={`p-2.5 rounded-2xl border transition-all active:scale-95 ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
             {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <LayoutGrid className="w-4 h-4" />}
           </button>
-          <h1 className="font-bold text-base tracking-tight">Creator<span className="text-red-500 italic">Studio</span></h1>
+          <Link href="/" className="font-bold text-base tracking-tight hover:opacity-80 transition-opacity">Creator<span className="text-red-500 italic">Studio</span></Link>
         </div>
         <div className="flex items-center gap-3">
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={`p-2.5 rounded-2xl border transition-all ${theme === 'dark' ? 'bg-[#0a0c10] border-slate-800 text-slate-400' : 'bg-white border-slate-200 text-slate-500'}`}>
