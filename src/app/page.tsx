@@ -126,16 +126,7 @@ export default function LandingPage() {
             </motion.div>
           </motion.div>
 
-          {/* Scroll indicator */}
-          <motion.a
-            href="#problem"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}
-            className="absolute bottom-8 flex flex-col items-center gap-1 text-slate-600 hover:text-slate-400 transition-colors"
-          >
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
-              <ChevronDown className="w-5 h-5" />
-            </motion.div>
-          </motion.a>
+          {/* No scroll indicator */}
         </div>
       </section>
 
