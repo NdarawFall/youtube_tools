@@ -4,11 +4,13 @@ import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
 import TodoList from '@/components/tools/TodoList';
+import KanbanBoard from '@/components/tools/KanbanBoard';
 import { supabase } from '@/lib/supabase';
-import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun, ListTodo } from 'lucide-react';
+import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Sun, ListTodo, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
+  { id: 'youtube-kanban', name: 'YouTube Studio', icon: Youtube, description: 'Kanban pour créateurs' },
   { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extraction d\'images HD' },
   { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Statistiques de script' },
   { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inverser une séquence' },
@@ -16,7 +18,7 @@ const TOOLS = [
 ];
 
 export default function Dashboard() {
-  const [activeToolId, setActiveToolId] = useState('frame-extractor');
+  const [activeToolId, setActiveToolId] = useState('youtube-kanban');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -38,6 +40,7 @@ export default function Dashboard() {
 
   const renderTool = () => {
     switch (activeToolId) {
+      case 'youtube-kanban': return <KanbanBoard theme={theme} />;
       case 'frame-extractor': return <VideoProcessor theme={theme} />;
       case 'char-counter': return <CharacterCounter theme={theme} />;
       case 'reverse-video': return <ReverseVideo theme={theme} />;
