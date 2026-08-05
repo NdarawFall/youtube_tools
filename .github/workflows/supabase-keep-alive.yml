@@ -1,0 +1,26 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # S'exécute tous les 3 jours à minuit
+    - cron: '0 0 */3 * *'
+  workflow_dispatch: # Permet de le lancer manuellement depuis l'interface GitHub si besoin
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase API
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "Erreur: Les secrets NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY ne sont pas configurés dans GitHub."
+            exit 1
+          fi
+          echo "Envoi d'une requête à Supabase pour maintenir le projet actif..."
+          curl -s -o /dev/null -w "Code HTTP: %{http_code}\n" -X GET "$SUPABASE_URL/rest/v1/" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY"
+          echo "Ping terminé avec succès !"
