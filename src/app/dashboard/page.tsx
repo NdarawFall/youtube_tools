@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { Video, LayoutGrid, LogOut, Type, RefreshCw, ChevronLeft, Moon, Sun, ListTodo, Film } from 'lucide-react';
+import { Video, LayoutGrid, LogOut, User, Moon, Sun, ListTodo, Film, Type, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTubeStudio from '@/components/tools/YouTubeStudio';
 import VideoProcessor from '@/components/VideoProcessor';
