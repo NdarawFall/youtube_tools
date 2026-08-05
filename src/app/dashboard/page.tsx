@@ -2,100 +2,90 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { Video, LayoutGrid, LogOut, User, Plus, Trash2, Film } from 'lucide-react';
-import { motion } from 'framer-motion';
-import ProjectBoard from '@/components/tools/ProjectBoard';
+import { Video, LayoutGrid, LogOut, Type, RefreshCw, ChevronLeft, Moon, Sun, ListTodo, Film } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import YouTubeStudio from '@/components/tools/YouTubeStudio';
+import VideoProcessor from '@/components/VideoProcessor';
+import CharacterCounter from '@/components/tools/CharacterCounter';
+import ReverseVideo from '@/components/tools/ReverseVideo';
+import TodoList from '@/components/tools/TodoList';
 
-interface DashboardUser extends SupabaseUser {
-  username?: string;
-}
-
-interface Project {
-    id: string;
-    name: string;
-}
+const TOOLS = [
+  { id: 'youtube-kanban', name: 'YouTube Studio', icon: Film, description: 'Organisez vos projets vidéo de l\'idée à la publication.' },
+  { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extrayez facilement des images haute définition de vos fichiers vidéo.' },
+  { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Analysez la longueur de vos scripts pour optimiser le temps de parole.' },
+  { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inversez le sens de lecture de vos clips pour des effets créatifs.' },
+  { id: 'todo-list', name: 'Todo List', icon: ListTodo, description: 'Gérez vos tâches quotidiennes et restez productif.' },
+];
 
 export default function Dashboard() {
-  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [user, setUser] = useState<DashboardUser | null>(null);
-  const [newProjectName, setNewProjectName] = useState('');
-  const theme = 'dark'; // Assuming dark theme for now
-
-  useEffect(() => {
-    const fetchUserAndProjects = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            setUser({ ...user, username: user.user_metadata.username || 'Utilisateur' });
-            const { data: projects } = await supabase.from('projects').select('*').eq('user_id', user.id);
-            if (projects) setProjects(projects);
-        }
-    };
-    fetchUserAndProjects();
-  }, []);
+  const [activeToolId, setActiveToolId] = useState('youtube-kanban');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const theme = 'dark';
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = '/';
   };
 
-  const addProject = async () => {
-      if(!newProjectName.trim()) return;
-      const { data, error } = await supabase.from('projects').insert([{name: newProjectName, user_id: user?.id}]).select().single();
-      if(!error && data) {
-          setProjects([...projects, data]);
-          setNewProjectName('');
-      }
-  }
-
-  const deleteProject = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    await supabase.from('projects').delete().eq('id', id);
-    setProjects(projects.filter(p => p.id !== id));
-    if(activeProjectId === id) setActiveProjectId(null);
-  }
+  const renderTool = () => {
+    switch (activeToolId) {
+      case 'youtube-kanban': return <YouTubeStudio theme={theme} />;
+      case 'frame-extractor': return <VideoProcessor theme={theme} />;
+      case 'char-counter': return <CharacterCounter theme={theme} />;
+      case 'reverse-video': return <ReverseVideo theme={theme} />;
+      case 'todo-list': return <TodoList theme={theme} />;
+      default: return <div className="text-center py-20 opacity-50">Outil en développement...</div>;
+    }
+  };
 
   return (
-    <main className="h-screen w-screen font-sans p-6 bg-[#050608] text-slate-200 flex flex-col">
-      <header className="flex justify-between items-center pb-8 border-b border-slate-800">
+    <main className="h-screen w-screen font-sans p-4 flex flex-col overflow-hidden bg-[#050608] text-slate-200">
+      <header className="flex-none flex items-center justify-between pb-6 border-b border-slate-800 mb-6">
         <div className="flex items-center gap-3">
-          <Video className="w-6 h-6 text-red-500" />
-          <h1 className="font-bold text-xl">Creator<span className="text-red-500 italic">Studio</span></h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2.5 rounded-2xl border bg-[#0a0c10] border-slate-800 text-slate-400">
+            <LayoutGrid className="w-4 h-4" />
+          </button>
+          <div className="flex items-center gap-2 font-bold text-base tracking-tight">
+            <Video className="w-5 h-5 text-red-500" />
+            Creator<span className="text-red-500 italic">Studio</span>
+          </div>
         </div>
-        <button onClick={handleLogout} className="flex items-center gap-2 text-red-500 hover:text-red-400">
+        <button onClick={handleLogout} className="flex items-center gap-2 p-2.5 rounded-2xl text-red-500 hover:bg-red-50 transition-colors">
             <LogOut className="w-4 h-4" /> Deconnexion
         </button>
       </header>
 
-      <section className="flex-1 mt-6 overflow-hidden">
-            {!activeProjectId ? (
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-2xl font-extrabold mb-6">Vos Projets</h2>
-                    <div className="flex gap-2 mb-8">
-                        <input value={newProjectName} onChange={(e) => setNewProjectName(e.target.value)} placeholder="Nom du nouveau projet" className="flex-1 p-3 rounded-xl bg-slate-900 border border-slate-800 outline-none focus:border-red-500" />
-                        <button onClick={addProject} className="px-6 py-3 bg-red-600 text-white rounded-xl font-bold flex items-center gap-2"><Plus className="w-5 h-5"/> Créer</button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {projects.map(p => (
-                            <div key={p.id} className="p-6 border border-slate-800 rounded-2xl flex justify-between items-center cursor-pointer hover:border-slate-600 transition-all bg-slate-900/50" onClick={() => setActiveProjectId(p.id)}>
-                                <div className="flex items-center gap-3">
-                                    <Film className="w-5 h-5 text-slate-400" />
-                                    <span className="font-semibold">{p.name}</span>
-                                </div>
-                                <button onClick={(e) => deleteProject(p.id, e)} className="p-2 hover:bg-red-900/20 rounded-lg"><Trash2 className="w-4 h-4 text-red-500" /></button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ) : (
-                <div className="w-full h-full flex flex-col">
-                    <button onClick={() => setActiveProjectId(null)} className="mb-4 text-sm text-slate-500 hover:text-white">← Retour aux projets</button>
-                    <div className="flex-1 min-h-0">
-                        <ProjectBoard projectId={activeProjectId} theme={theme} />
-                    </div>
-                </div>
+      <div className="flex-1 flex gap-6 overflow-hidden">
+        <AnimatePresence>
+            {isSidebarOpen && (
+            <motion.nav initial={{ width: 0, opacity: 0 }} animate={{ width: 220, opacity: 1 }} exit={{ width: 0, opacity: 0 }} className="flex-none flex flex-col gap-2 overflow-hidden">
+                {TOOLS.map((tool, index) => {
+                const Icon = tool.icon;
+                const isActive = activeToolId === tool.id;
+                return (
+                    <button key={tool.id} onClick={() => setActiveToolId(tool.id)} className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all text-sm font-semibold ${isActive ? 'bg-[#0a0c10] text-red-500 border border-slate-800' : 'text-slate-500 hover:text-slate-300'} ${index === 1 ? 'mt-4 border-t border-slate-800 pt-4' : ''}`}>
+                    <Icon className="w-4 h-4" />
+                    {tool.name}
+                    </button>
+                );
+                })}
+            </motion.nav>
             )}
+        </AnimatePresence>
+
+        <section className="flex-1 rounded-3xl p-6 md:p-8 flex flex-col overflow-hidden border border-slate-800 bg-[#0a0c10] shadow-xl">
+            <div className="w-full h-full flex flex-col overflow-hidden">
+                <div className="mb-6 flex-none">
+                    <h2 className="text-2xl font-extrabold">{TOOLS.find(t => t.id === activeToolId)?.name}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{TOOLS.find(t => t.id === activeToolId)?.description}</p>
+                </div>
+                <div className="w-full flex-1 overflow-hidden flex justify-center">
+                    {renderTool()}
+                </div>
+            </div>
         </section>
+      </div>
     </main>
   );
 }
