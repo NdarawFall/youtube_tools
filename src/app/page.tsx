@@ -4,7 +4,7 @@ import Auth from '@/components/Auth';
 import { supabase } from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 import { motion, Variants } from 'framer-motion';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown, Video } from 'lucide-react';
 import Link from 'next/link';
 
 const PAIN_POINTS = [
@@ -50,9 +50,7 @@ export default function LandingPage() {
       {/* ── NAV ── */}
       <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 bg-[#050608]/70 backdrop-blur-xl border-b border-white/[0.04]">
         <span className="flex items-center gap-2 font-black text-lg tracking-tight text-white select-none">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-600 to-orange-500 flex items-center justify-center">
-            <span className="text-white font-black">C</span>
-          </div>
+          <Video className="w-8 h-8 text-red-500" />
           Creator<span className="text-red-500 italic">Studio</span>
         </span>
         {session ? (
