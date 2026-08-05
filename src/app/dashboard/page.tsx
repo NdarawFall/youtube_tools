@@ -12,11 +12,11 @@ import { Video, LayoutGrid, Type, RefreshCw, ChevronLeft, LogOut, User, Moon, Su
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TOOLS = [
-  { id: 'youtube-kanban', name: 'YouTube Studio', icon: Film, description: 'Kanban pour créateurs' },
-  { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extraction d\'images HD' },
-  { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Statistiques de script' },
-  { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inverser une séquence' },
-  { id: 'todo-list', name: 'Todo List', icon: ListTodo, description: 'Gestion des tâches interactives' },
+  { id: 'youtube-kanban', name: 'YouTube Studio', icon: Film, description: 'Organisez vos vidéos de l\'idée à la publication avec un tableau Kanban intuitif.' },
+  { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extrayez facilement des images haute définition de vos fichiers vidéo.' },
+  { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Analysez la longueur de vos scripts pour optimiser le temps de parole.' },
+  { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inversez le sens de lecture de vos clips pour des effets créatifs.' },
+  { id: 'todo-list', name: 'Todo List', icon: ListTodo, description: 'Gérez vos tâches quotidiennes et restez productif tout au long de la journée.' },
 ];
 
 interface DashboardUser extends SupabaseUser {

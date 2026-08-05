@@ -49,7 +49,10 @@ export default function LandingPage() {
 
       {/* ── NAV ── */}
       <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 bg-[#050608]/70 backdrop-blur-xl border-b border-white/[0.04]">
-        <span className="font-black text-lg tracking-tight text-white select-none">
+        <span className="flex items-center gap-2 font-black text-lg tracking-tight text-white select-none">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-600 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black">C</span>
+          </div>
           Creator<span className="text-red-500 italic">Studio</span>
         </span>
         {session ? (
@@ -132,6 +135,10 @@ export default function LandingPage() {
 
       {/* ── PROBLEM ── */}
       <section id="problem" className="py-28 px-6 md:px-12 relative">
+        <div className="max-w-2xl mx-auto bg-amber-950/20 border border-amber-900/50 p-6 rounded-2xl mb-16 text-center">
+            <p className="text-amber-500 font-semibold">⚠️ Attention : Expérience optimisée</p>
+            <p className="text-slate-400 text-sm mt-2">Pour une utilisation optimale de CreatorStudio, veuillez utiliser un ordinateur ou une tablette. L'interface n'est pas adaptée aux smartphones.</p>
+        </div>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <motion.p

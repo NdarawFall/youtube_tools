@@ -35,6 +35,7 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
   const [editingTitle, setEditingTitle] = useState('');
   
   const [draggedVideo, setDraggedVideo] = useState<YoutubeVideo | null>(null);
+  const [modalVideo, setModalVideo] = useState<YoutubeVideo | null>(null);
 
   const bgClass = theme === 'dark' ? 'bg-[#050608]' : 'bg-slate-50';
   const colBgClass = theme === 'dark' ? 'bg-[#0a0c10]' : 'bg-white';
@@ -203,36 +204,17 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
                       draggable
                       // @ts-ignore
                       onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, video)}
+                      onClick={() => { setModalVideo(video); setEditingTitle(video.title); }}
                       className={`group relative p-4 rounded-xl border ${borderClass} ${bgClass} shadow-sm cursor-grab active:cursor-grabbing hover:border-red-500/50 transition-colors`}
                     >
-                        {editingId === video.id ? (
-                            <div className="flex flex-col gap-2">
-                                <input 
-                                    type="text" autoFocus
-                                    value={editingTitle} onChange={(e) => setEditingTitle(e.target.value)}
-                                    onBlur={saveEdit} onKeyDown={(e) => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') setEditingId(null); }}
-                                    className={`w-full p-2 rounded-lg bg-black/10 dark:bg-white/10 outline-none text-sm ${textClass}`}
-                                />
+                        <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-start gap-2.5 min-w-0">
+                                <span className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 ${
+                                    theme === 'dark' ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'
+                                }`}>{index + 1}</span>
+                                <span className={`text-sm font-medium leading-tight ${textClass} truncate`}>{video.title}</span>
                             </div>
-                        ) : (
-                            <div className="flex items-start justify-between gap-2">
-                                <div className="flex items-start gap-2.5 min-w-0">
-                                    {/* Position number */}
-                                    <span className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 ${
-                                        theme === 'dark' ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'
-                                    }`}>{index + 1}</span>
-                                    <span className={`text-sm font-medium leading-tight ${textClass}`}>{video.title}</span>
-                                </div>
-                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                                    <button onClick={() => startEditing(video)} className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
-                                        <Edit2 className="w-3 h-3" />
-                                    </button>
-                                    <button onClick={() => handleDelete(video.id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
-                                        <Trash2 className="w-3 h-3" />
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                        </div>
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -248,6 +230,30 @@ export default function KanbanBoard({ theme }: { theme: 'dark' | 'light' }) {
           );
         })}
       </div>
+      {/* Task Modal */}
+      {modalVideo && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <div className={`w-full max-w-lg rounded-3xl p-8 border ${borderClass} ${bgClass} shadow-2xl`}>
+                <h3 className={`text-xl font-bold mb-6 ${textClass}`}>Détails de la tâche</h3>
+                <textarea 
+                    value={editingTitle}
+                    onChange={(e) => setEditingTitle(e.target.value)}
+                    className={`w-full h-32 p-4 rounded-xl bg-black/10 dark:bg-white/10 outline-none text-sm ${textClass} mb-6`}
+                />
+                <div className="flex justify-between gap-3">
+                    <button onClick={() => { handleDelete(modalVideo.id); setModalVideo(null); }} className="px-5 py-2.5 rounded-xl bg-red-900/20 text-red-500 font-semibold text-sm hover:bg-red-900/40">Supprimer</button>
+                    <div className="flex gap-3">
+                        <button onClick={() => setModalVideo(null)} className="px-5 py-2.5 rounded-xl bg-slate-700 text-white font-semibold text-sm hover:bg-slate-600">Fermer</button>
+                        <button onClick={() => { 
+                            setVideos(prev => prev.map(v => v.id === modalVideo.id ? { ...v, title: editingTitle } : v));
+                            supabase.from('youtube_videos').update({ title: editingTitle }).eq('id', modalVideo.id);
+                            setModalVideo(null);
+                        }} className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-semibold text-sm hover:bg-red-700">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 }
