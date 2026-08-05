@@ -23,7 +23,22 @@ export async function GET(request: Request) {
         },
       }
     );
-    await supabase.auth.exchangeCodeForSession(code);
+
+    const { data: { session } } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (session?.user) {
+      // Check if user already has a profile with an avatar
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .eq('id', session.user.id)
+        .single();
+
+      // New Google user — no avatar yet → redirect to avatar selection
+      if (!profile?.avatar_url) {
+        return NextResponse.redirect(new URL('/auth/choose-avatar', origin));
+      }
+    }
   }
 
   return NextResponse.redirect(new URL('/dashboard', origin));
