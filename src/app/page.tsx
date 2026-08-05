@@ -3,223 +3,305 @@ import { useState, useEffect } from 'react';
 import Auth from '@/components/Auth';
 import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
-import { ArrowRight, LayoutDashboard, ListTodo, Video, Type, CheckCircle2, Film } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+
+const PAIN_POINTS = [
+  {
+    emoji: '🗂️',
+    title: 'Des idées partout, nulle part',
+    desc: "Notes, Google Docs, mémos vocaux... vos idées de vidéos sont éparpillées et finissent par mourir dans l'oubli.",
+  },
+  {
+    emoji: '🔄',
+    title: 'Un flux de travail inexistant',
+    desc: "Impossible de savoir où en est chaque vidéo. Script fini ? Voix enregistrée ? Montage commencé ? Le chaos règne.",
+  },
+  {
+    emoji: '📉',
+    title: 'La régularité, un calvaire',
+    desc: "Sans système, la constance est un effort. Vous publiez par à-coups, l'algorithme ne vous suit plus, les vues s'effondrent.",
+  },
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] } }),
+};
 
 export default function LandingPage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authInitialMode, setAuthInitialMode] = useState<'login'|'signup-avatar'>('login');
+  const [authInitialMode, setAuthInitialMode] = useState<'login' | 'signup-avatar'>('login');
   const [session, setSession] = useState<any>(null);
 
   const openLogin = () => { setAuthInitialMode('login'); setIsAuthModalOpen(true); };
   const openSignup = () => { setAuthInitialMode('signup-avatar'); setIsAuthModalOpen(true); };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
     return () => subscription.unsubscribe();
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#050608] text-slate-200 font-sans selection:bg-red-500/30 overflow-x-hidden relative">
-      
-      {/* Animated Background Mesh */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 -left-1/4 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/20 via-[#050608]/0 to-transparent blur-[120px]"></div>
-        <div className="absolute bottom-0 -right-1/4 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-900/10 via-[#050608]/0 to-transparent blur-[120px]"></div>
-        <motion.div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '4rem 4rem' }}
-          animate={{ backgroundPosition: ['0px 0px', '64px 64px'] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-        />
-      </div>
+    <main className="bg-[#050608] text-slate-200 font-sans overflow-x-hidden">
 
-      {/* Navbar */}
-      <nav className="fixed w-full z-50 px-8 py-6 flex items-center justify-between backdrop-blur-md border-b border-white/5 bg-[#050608]/50">
-        <h1 className="font-bold text-xl tracking-tight text-white flex items-center gap-2">
-            <Film className="w-6 h-6 text-red-500" />
-            Creator<span className="text-red-500 italic">Studio</span>
-        </h1>
+      {/* ── NAV ── */}
+      <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 bg-[#050608]/70 backdrop-blur-xl border-b border-white/[0.04]">
+        <span className="font-black text-lg tracking-tight text-white select-none">
+          Creator<span className="text-red-500 italic">Studio</span>
+        </span>
         {session ? (
-            <Link href="/dashboard" className="px-5 py-2.5 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all shadow-lg shadow-red-500/20">
-                Accéder à l'espace
-            </Link>
+          <Link href="/dashboard" className="px-5 py-2 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all">
+            Mon espace →
+          </Link>
         ) : (
-            <div className="flex items-center gap-2">
-                <button onClick={openLogin} className="px-5 py-2.5 rounded-full text-slate-300 text-sm font-semibold hover:text-white transition-colors">
-                    Connexion
-                </button>
-                <button onClick={openSignup} className="px-5 py-2.5 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all shadow-lg shadow-red-500/20">
-                    S'inscrire
-                </button>
-            </div>
+          <div className="flex items-center gap-1">
+            <button onClick={openLogin} className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors font-medium">Connexion</button>
+            <button onClick={openSignup} className="px-5 py-2 rounded-full bg-white text-[#050608] text-sm font-bold hover:bg-slate-200 transition-all shadow-lg">
+              Commencer
+            </button>
+          </div>
         )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-40 pb-20 px-8 text-center z-10 flex flex-col items-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-4xl flex flex-col items-center">
-            
-            <motion.span 
-                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
-                className="px-4 py-1.5 rounded-full bg-red-950/40 text-red-400 text-xs font-bold uppercase tracking-wider mb-6 flex items-center gap-2 border border-red-900/50 backdrop-blur-sm"
+      {/* ── HERO ── */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden">
+        {/* Background glows */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-red-600/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-orange-500/5 rounded-full blur-[100px]" />
+          {/* Subtle grid */}
+          <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '3rem 3rem' }} />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-8">
+          <motion.div
+            initial="hidden" animate="show"
+            className="flex flex-col items-center gap-6"
+          >
+            <motion.span
+              variants={fadeUp} custom={0}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-red-500/20 bg-red-500/5 text-red-400 text-xs font-bold uppercase tracking-widest"
             >
-                <CheckCircle2 className="w-4 h-4" /> La suite ultime pour YouTubeurs
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              Pour les créateurs Faceless
             </motion.span>
-            
-            <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-[1.1] text-white">
-                Pilotez votre chaîne <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400 italic">avec précision.</span>
-            </h1>
-            
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed">
-                De l'idée brillante à la publication finale. Un studio tout-en-un conçu spécifiquement pour les créateurs de contenu exigeants (Faceless & Classique) qui veulent industrialiser leur production.
-            </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full">
-                {session ? (
-                    <Link href="/dashboard" className="group px-8 py-4 rounded-2xl bg-white text-[#050608] font-bold text-lg hover:bg-slate-200 transition-all shadow-xl shadow-white/10 flex items-center gap-3 w-full sm:w-auto justify-center">
-                        Ouvrir le Studio
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                ) : (
-                    <>
-                        <button onClick={openSignup} className="group px-8 py-4 rounded-2xl bg-white text-[#050608] font-bold text-lg hover:bg-slate-200 transition-all shadow-xl shadow-white/10 flex items-center gap-3 w-full sm:w-auto justify-center">
-                            Commencer gratuitement
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
-                        <button onClick={openLogin} className="px-8 py-4 rounded-2xl bg-[#0a0c10] text-white font-semibold text-lg hover:bg-slate-900 border border-slate-800 transition-all w-full sm:w-auto text-center">
-                            Se connecter
-                        </button>
-                    </>
-                )}
-                <a href="#features" className="px-8 py-4 rounded-2xl bg-transparent text-slate-400 font-medium text-sm hover:text-white transition-colors w-full sm:w-auto text-center">
-                    Découvrir les outils ↓
-                </a>
-            </div>
-        </motion.div>
+            <motion.h1
+              variants={fadeUp} custom={1}
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.0] text-white"
+            >
+              Créer sans système,<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-br from-red-500 via-orange-400 to-red-600">
+                c'est perdre du temps.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp} custom={2}
+              className="max-w-xl text-lg md:text-xl text-slate-400 leading-relaxed"
+            >
+              Les créateurs de contenu anonymes qui réussissent ont tous un point commun&nbsp;: un
+              <span className="text-slate-200 font-medium"> processus clair</span>. CreatorStudio est le tableau de bord
+              conçu pour transformer votre chaos créatif en <span className="text-slate-200 font-medium">machine de production</span>.
+            </motion.p>
+
+            <motion.div variants={fadeUp} custom={3} className="flex flex-col sm:flex-row items-center gap-3 w-full justify-center">
+              {session ? (
+                <Link href="/dashboard" className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#050608] font-bold text-base hover:bg-slate-100 transition-all shadow-2xl">
+                  Accéder au Studio <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ) : (
+                <>
+                  <button onClick={openSignup} className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#050608] font-bold text-base hover:bg-slate-100 transition-all shadow-2xl">
+                    Démarrer gratuitement <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                  <button onClick={openLogin} className="px-8 py-4 rounded-2xl text-slate-400 font-medium text-base hover:text-white transition-colors">
+                    Déjà un compte
+                  </button>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.a
+            href="#problem"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}
+            className="absolute bottom-8 flex flex-col items-center gap-1 text-slate-600 hover:text-slate-400 transition-colors"
+          >
+            <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
+              <ChevronDown className="w-5 h-5" />
+            </motion.div>
+          </motion.a>
+        </div>
       </section>
 
-      {/* Visual Showcase (Kanban Mockup) */}
-      <section className="relative px-8 pb-32 z-10">
-        <motion.div 
-            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 1 }}
-            className="max-w-5xl mx-auto rounded-3xl bg-[#0a0c10]/80 border border-slate-800 p-2 backdrop-blur-xl shadow-2xl shadow-red-900/10"
-        >
-            <div className="rounded-2xl border border-slate-800/50 bg-[#050608] overflow-hidden flex flex-col h-[400px]">
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-800 bg-[#0a0c10]">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <div className="flex-1 p-6 grid grid-cols-3 gap-6 overflow-hidden opacity-80 pointer-events-none">
-                    {/* Fake Kanban Columns */}
-                    <div className="flex flex-col gap-3">
-                        <div className="text-sm font-bold text-slate-400 mb-2">💡 Idée</div>
-                        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-sm">Pourquoi l'IA va tout changer</div>
-                        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-sm">Top 10 astuces Next.js</div>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                        <div className="text-sm font-bold text-slate-400 mb-2">📝 Script en cours</div>
-                        <div className="p-4 rounded-xl bg-slate-900 border border-red-900/50 text-sm">Documentaire : L'histoire de Supabase</div>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                        <div className="text-sm font-bold text-slate-400 mb-2">🚀 Prêt à publier</div>
-                        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-sm">Mon setup de code (2026)</div>
-                    </div>
-                </div>
-            </div>
-        </motion.div>
-      </section>
-
-      {/* Features Grid */}
-      <section id="features" className="py-24 px-8 border-t border-white/5 bg-gradient-to-b from-[#050608] to-[#0a0c10] z-10 relative">
+      {/* ── PROBLEM ── */}
+      <section id="problem" className="py-28 px-6 md:px-12 relative">
         <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-5xl font-bold mb-4">L'arsenal du <span className="text-red-500">créateur</span></h2>
-                <p className="text-slate-400 text-lg">Ne perdez plus de temps entre 10 applications différentes.</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-                {[
-                    { icon: LayoutDashboard, title: "YouTube Kanban", desc: "Le cœur de votre chaîne. Organisez vos vidéos par statut (Idée, Script, Montage, Publication) grâce à un tableau intuitif en glisser-déposer." },
-                    { icon: ListTodo, title: "Todo List Intégrée", desc: "Gardez le cap avec une liste de tâches globale. Cochez ce qui est fait, réorganisez vos priorités en un clin d'œil." },
-                    { icon: Video, title: "Extraction de Frames", desc: "Besoin d'une miniature ? Importez votre vidéo et extrayez instantanément la première ou dernière frame en haute qualité." }
-                ].map((f, i) => (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.1 }}
-                        key={i} 
-                        className="p-8 rounded-3xl bg-[#0a0c10] border border-slate-800 hover:border-red-900/50 transition-colors shadow-2xl group"
-                    >
-                        <div className="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <f.icon className="w-7 h-7 text-red-500" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white mb-4">{f.title}</h3>
-                        <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
-                    </motion.div>
-                ))}
-            </div>
+          <div className="text-center mb-16">
+            <motion.p
+              initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp}
+              className="text-xs font-bold uppercase tracking-widest text-red-500 mb-4"
+            >Le problème</motion.p>
+            <motion.h2
+              initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp} custom={1}
+              className="text-4xl md:text-5xl font-black tracking-tight text-white"
+            >
+              Vous créez du contenu.<br />
+              <span className="text-slate-500">Pas des systèmes.</span>
+            </motion.h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {PAIN_POINTS.map((p, i) => (
+              <motion.div
+                key={i}
+                initial="hidden" whileInView="show" viewport={{ once: true }}
+                variants={fadeUp} custom={i * 0.15}
+                className="group relative p-8 rounded-3xl bg-white/[0.02] border border-white/[0.06] hover:border-red-500/20 hover:bg-white/[0.04] transition-all duration-500"
+              >
+                <div className="text-4xl mb-6">{p.emoji}</div>
+                <h3 className="text-lg font-bold text-white mb-3">{p.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{p.desc}</p>
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* How it works Section */}
-      <section className="py-24 px-8 relative z-10 bg-[#050608]">
-        <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-5xl font-bold mb-4">Comment ça <span className="text-red-500 italic">marche ?</span></h2>
-                <p className="text-slate-400 text-lg">Un processus fluide, de la conception à la mise en ligne.</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-12 relative">
-                <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-red-900/0 via-red-500/20 to-red-900/0 -z-10"></div>
-                {[
-                    { step: "01", title: "Centralisez", desc: "Notez toutes vos idées de vidéos dans le Kanban. Fini les post-its perdus ou les blocs-notes éparpillés." },
-                    { step: "02", title: "Produisez", desc: "Faites glisser vos cartes étape par étape : Script, Voix-Off, Montage. Suivez votre progression visuellement." },
-                    { step: "03", title: "Extrayez & Publiez", desc: "Générez vos miniatures grâce à l'extracteur de frames intégré. Votre vidéo est prête à exploser l'algorithme." }
-                ].map((s, i) => (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.2 }}
-                        key={i} className="flex flex-col items-center text-center relative"
-                    >
-                        <div className="w-16 h-16 rounded-full bg-[#0a0c10] border-2 border-red-500/30 text-red-500 flex items-center justify-center text-2xl font-black mb-6 shadow-[0_0_30px_-5px_rgba(239,68,68,0.3)]">
-                            {s.step}
-                        </div>
-                        <h3 className="text-xl font-bold text-white mb-3">{s.title}</h3>
-                        <p className="text-slate-400 text-sm leading-relaxed">{s.desc}</p>
-                    </motion.div>
-                ))}
-            </div>
+      {/* ── SOLUTION ── */}
+      <section className="py-28 px-6 md:px-12 border-t border-white/[0.04] relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-red-600/8 rounded-full blur-[100px]" />
         </div>
-      </section>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <motion.p
+            initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp}
+            className="text-xs font-bold uppercase tracking-widest text-red-500 mb-4"
+          >La solution</motion.p>
+          <motion.h2
+            initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp} custom={1}
+            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-8 leading-[1.1]"
+          >
+            Un seul endroit.<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">
+              Tout votre workflow.
+            </span>
+          </motion.h2>
+          <motion.p
+            initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp} custom={2}
+            className="text-lg text-slate-400 leading-relaxed mb-12 max-w-2xl mx-auto"
+          >
+            CreatorStudio centralise chaque étape de votre production — de l'étincelle initiale à la vidéo publiée — dans un espace pensé exclusivement pour les créateurs anonymes qui veulent scaler sans se noyer.
+          </motion.p>
 
-      {/* Target Audience Section */}
-      <section className="py-24 px-8 border-t border-white/5 bg-[#0a0c10] z-10 relative">
-        <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Fait pour les <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">Créateurs Ambitieux</span></h2>
-            <p className="text-slate-400 text-lg mb-12">
-                Que vous soyez un créateur "Faceless" gérant plusieurs chaînes automatisées, ou un YouTubeur classique cherchant à structurer sa production hebdomadaire, CreatorStudio est le tableau de bord qu'il vous manquait.
+          {/* Quote / Statement */}
+          <motion.blockquote
+            initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp} custom={3}
+            className="relative px-10 py-8 rounded-3xl bg-white/[0.03] border border-white/[0.08]"
+          >
+            <div className="text-5xl text-red-500/30 font-serif absolute top-4 left-6 leading-none select-none">"</div>
+            <p className="text-xl md:text-2xl font-semibold text-slate-200 italic leading-relaxed">
+              Les meilleures chaînes Faceless ne gagnent pas parce qu'elles ont plus de talent.
+              Elles gagnent parce qu'elles ont un meilleur système.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-                <span className="px-6 py-3 rounded-full bg-slate-900 border border-slate-800 text-sm font-medium">Chaînes d'automatisation</span>
-                <span className="px-6 py-3 rounded-full bg-slate-900 border border-slate-800 text-sm font-medium">Créateurs Solo</span>
-                <span className="px-6 py-3 rounded-full bg-slate-900 border border-slate-800 text-sm font-medium">Monteurs Vidéos freelances</span>
-            </div>
+          </motion.blockquote>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 px-8 border-t border-white/5 bg-[#050608] text-center text-slate-500 text-sm relative z-10">
-          <p>© {new Date().getFullYear()} CreatorStudio. Tous droits réservés.</p>
+      {/* ── HOW IT WORKS ── */}
+      <section className="py-28 px-6 md:px-12 border-t border-white/[0.04]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <motion.p
+              initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp}
+              className="text-xs font-bold uppercase tracking-widest text-red-500 mb-4"
+            >Comment ça marche</motion.p>
+            <motion.h2
+              initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp} custom={1}
+              className="text-4xl md:text-5xl font-black tracking-tight text-white"
+            >Simple. Rapide. Efficace.</motion.h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 relative">
+            {/* Connecting line */}
+            <div className="hidden md:block absolute top-12 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
+            {[
+              { n: '01', title: 'Capturez', desc: "Dès qu'une idée surgit, elle a une place. Fini le Post-it oublié au fond d'un tiroir." },
+              { n: '02', title: 'Organisez', desc: "Visualisez votre pipeline de A à Z. Sachez exactement où en est chaque projet, en un coup d'œil." },
+              { n: '03', title: 'Publiez', desc: "Avancez à votre rythme, sans friction. Votre seul travail : créer. Le reste, c'est nous." },
+            ].map((s, i) => (
+              <motion.div
+                key={i}
+                initial="hidden" whileInView="show" viewport={{ once: true }}
+                variants={fadeUp} custom={i * 0.2}
+                className="flex flex-col items-center text-center gap-4"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-[#0a0c10] border border-red-500/20 text-red-500 text-xl font-black flex items-center justify-center shadow-[0_0_40px_-8px_rgba(239,68,68,0.25)] relative z-10">
+                  {s.n}
+                </div>
+                <h3 className="text-xl font-bold text-white">{s.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
+      <section className="py-28 px-6 md:px-12 border-t border-white/[0.04] relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-red-600/10 rounded-full blur-[100px]" />
+        </div>
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <motion.h2
+            initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp}
+            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6 leading-[1.1]"
+          >
+            Votre prochain niveau<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">commence ici.</span>
+          </motion.h2>
+          <motion.p
+            initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp} custom={1}
+            className="text-lg text-slate-500 mb-10"
+          >
+            Gratuit. Sans carte bancaire. Prêt en 60 secondes.
+          </motion.p>
+          <motion.div
+            initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp} custom={2}
+          >
+            {session ? (
+              <Link href="/dashboard" className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-white text-[#050608] font-black text-lg hover:bg-slate-100 transition-all shadow-2xl shadow-white/10">
+                Ouvrir le Studio <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            ) : (
+              <button onClick={openSignup} className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-white text-[#050608] font-black text-lg hover:bg-slate-100 transition-all shadow-2xl shadow-white/10">
+                Créer mon espace gratuit <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="py-8 px-6 border-t border-white/[0.04] flex items-center justify-between text-slate-600 text-xs">
+        <span className="font-bold text-slate-500">Creator<span className="text-red-700 italic">Studio</span></span>
+        <span>© {new Date().getFullYear()} — Tous droits réservés</span>
       </footer>
 
       {isAuthModalOpen && <Auth theme="dark" initialMode={authInitialMode} onClose={() => setIsAuthModalOpen(false)} />}
