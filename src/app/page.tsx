@@ -8,7 +8,11 @@ import Link from 'next/link';
 
 export default function LandingPage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authInitialMode, setAuthInitialMode] = useState<'login'|'signup-avatar'>('login');
   const [session, setSession] = useState<any>(null);
+
+  const openLogin = () => { setAuthInitialMode('login'); setIsAuthModalOpen(true); };
+  const openSignup = () => { setAuthInitialMode('signup-avatar'); setIsAuthModalOpen(true); };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -48,9 +52,14 @@ export default function LandingPage() {
                 Accéder à l'espace
             </Link>
         ) : (
-            <button onClick={() => setIsAuthModalOpen(true)} className="px-5 py-2.5 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all shadow-lg shadow-red-500/20">
-                Connexion
-            </button>
+            <div className="flex items-center gap-2">
+                <button onClick={openLogin} className="px-5 py-2.5 rounded-full text-slate-300 text-sm font-semibold hover:text-white transition-colors">
+                    Connexion
+                </button>
+                <button onClick={openSignup} className="px-5 py-2.5 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all shadow-lg shadow-red-500/20">
+                    S'inscrire
+                </button>
+            </div>
         )}
       </nav>
 
@@ -81,13 +90,18 @@ export default function LandingPage() {
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </Link>
                 ) : (
-                    <button onClick={() => setIsAuthModalOpen(true)} className="group px-8 py-4 rounded-2xl bg-white text-[#050608] font-bold text-lg hover:bg-slate-200 transition-all shadow-xl shadow-white/10 flex items-center gap-3 w-full sm:w-auto justify-center">
-                        Commencer gratuitement
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    <>
+                        <button onClick={openSignup} className="group px-8 py-4 rounded-2xl bg-white text-[#050608] font-bold text-lg hover:bg-slate-200 transition-all shadow-xl shadow-white/10 flex items-center gap-3 w-full sm:w-auto justify-center">
+                            Commencer gratuitement
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                        <button onClick={openLogin} className="px-8 py-4 rounded-2xl bg-[#0a0c10] text-white font-semibold text-lg hover:bg-slate-900 border border-slate-800 transition-all w-full sm:w-auto text-center">
+                            Se connecter
+                        </button>
+                    </>
                 )}
-                <a href="#features" className="px-8 py-4 rounded-2xl bg-[#0a0c10] text-white font-semibold text-lg hover:bg-slate-900 border border-slate-800 transition-all w-full sm:w-auto text-center">
-                    Découvrir les outils
+                <a href="#features" className="px-8 py-4 rounded-2xl bg-transparent text-slate-400 font-medium text-sm hover:text-white transition-colors w-full sm:w-auto text-center">
+                    Découvrir les outils ↓
                 </a>
             </div>
         </motion.div>
@@ -208,7 +222,7 @@ export default function LandingPage() {
           <p>© {new Date().getFullYear()} CreatorStudio. Tous droits réservés.</p>
       </footer>
 
-      {isAuthModalOpen && <Auth theme="dark" onClose={() => setIsAuthModalOpen(false)} />}
+      {isAuthModalOpen && <Auth theme="dark" initialMode={authInitialMode} onClose={() => setIsAuthModalOpen(false)} />}
     </main>
   );
 }
