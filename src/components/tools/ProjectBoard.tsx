@@ -66,9 +66,9 @@ export default function ProjectBoard({ projectId, theme }: { projectId: string, 
   if (isLoading) return <div className={textClass}>Chargement...</div>;
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 h-full">
+    <div className="flex gap-4 overflow-x-auto pb-4 h-full scrollbar-hide">
       {COLUMNS.map(column => (
-        <div key={column.id} className={`flex-none w-72 rounded-2xl border ${borderClass} ${colBgClass} p-4 flex flex-col gap-4 relative group`}>
+        <div key={column.id} className={`flex-none w-72 rounded-2xl border ${borderClass} ${colBgClass} p-4 flex flex-col gap-4`}>
           <h3 className={`font-bold ${textClass}`}>{column.title}</h3>
           
           <div className="flex-1 flex flex-col gap-2">
@@ -77,11 +77,10 @@ export default function ProjectBoard({ projectId, theme }: { projectId: string, 
                 {column.id === 'publication' ? <label className="flex items-center gap-2"><input type="checkbox" /> {task.title}</label> : task.title}
               </div>
             ))}
+            <button onClick={() => addTask(column.id)} className="w-full p-3 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
+                <Plus className="w-4 h-4" /> Ajouter
+            </button>
           </div>
-
-          <button onClick={() => addTask(column.id)} className="absolute bottom-4 right-4 p-2 bg-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-            <Plus className="w-4 h-4 text-white" />
-          </button>
         </div>
       ))}
 

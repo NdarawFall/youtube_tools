@@ -71,13 +71,13 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-            <div className={`flex items-center gap-2 px-3 py-2 rounded-2xl border text-xs font-medium border-slate-800 bg-[#0a0c10] text-slate-300`}>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl border border-slate-800 bg-[#0a0c10]">
                 {avatarUrl ? (
-                  <img src={avatarUrl} alt="avatar" className="w-6 h-6 rounded-full object-cover ring-1 ring-red-500/50" />
+                  <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover ring-2 ring-red-500" />
                 ) : (
-                  <User className="w-3.5 h-3.5" />
+                  <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs text-white">{user?.username?.charAt(0) || 'U'}</div>
                 )}
-                <span>{user?.username || 'Utilisateur'}</span>
+                <span className="text-xs font-medium text-slate-300">{user?.username || 'Utilisateur'}</span>
             </div>
             <button onClick={handleLogout} className="flex items-center gap-2 p-2.5 rounded-2xl text-red-500 hover:bg-red-50 transition-colors">
                 <LogOut className="w-4 h-4" /> Deconnexion
