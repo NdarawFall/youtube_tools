@@ -86,8 +86,8 @@ export default function Dashboard() {
                 )}
                 <span>{user?.username || 'Utilisateur'}</span>
             </div>
-            <button onClick={handleLogout} className="p-2.5 rounded-2xl text-red-500 hover:bg-red-50 transition-colors">
-                <LogOut className="w-4 h-4" />
+            <button onClick={handleLogout} className="flex items-center gap-2 p-2.5 rounded-2xl text-red-500 hover:bg-red-50 transition-colors">
+                <LogOut className="w-4 h-4" /> Deconnexion
             </button>
         </div>
       </header>
@@ -96,11 +96,11 @@ export default function Dashboard() {
         <AnimatePresence>
             {isSidebarOpen && (
             <motion.nav initial={{ width: 0, opacity: 0 }} animate={{ width: 220, opacity: 1 }} exit={{ width: 0, opacity: 0 }} className="flex-none flex md:flex-col gap-2 overflow-hidden">
-                {TOOLS.map((tool) => {
+                {TOOLS.map((tool, index) => {
                 const Icon = tool.icon;
                 const isActive = activeToolId === tool.id;
                 return (
-                    <button key={tool.id} onClick={() => setActiveToolId(tool.id)} className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all text-sm font-semibold flex-1 md:flex-none ${isActive ? (theme === 'dark' ? 'bg-[#0a0c10] text-red-500 border border-slate-800' : 'bg-white text-red-600 border border-slate-200 shadow-sm') : (theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-900')}`}>
+                    <button key={tool.id} onClick={() => setActiveToolId(tool.id)} className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all text-sm font-semibold flex-1 md:flex-none ${isActive ? (theme === 'dark' ? 'bg-[#0a0c10] text-red-500 border border-slate-800' : 'bg-white text-red-600 border border-slate-200 shadow-sm') : (theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-900')} ${index === 1 ? 'mt-4 border-t border-slate-800 pt-4' : ''}`}>
                     <Icon className="w-4 h-4" />
                     {tool.name}
                     </button>
@@ -114,6 +114,7 @@ export default function Dashboard() {
             <div className="w-full h-full flex flex-col overflow-hidden">
                 <div className="mb-6 flex-none">
                     <h2 className="text-2xl font-extrabold">{TOOLS.find(t => t.id === activeToolId)?.name}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{TOOLS.find(t => t.id === activeToolId)?.description}</p>
                 </div>
                 <div className="w-full flex-1 overflow-hidden flex justify-center">
                     {renderTool()}

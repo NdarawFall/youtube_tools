@@ -15,6 +15,7 @@ interface YoutubeVideo {
 const COLUMNS = [
   { id: 'idea', title: '💡 Idée' },
   { id: 'script', title: '📝 Script' },
+  { id: 'thumbnail', title: '🖼️ Miniature' },
   { id: 'voiceover', title: '🎙️ Voix-Off' },
   { id: 'assets', title: '🖼️ Assets' },
   { id: 'editing', title: '✂️ Montage' },
