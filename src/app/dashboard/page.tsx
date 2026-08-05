@@ -18,6 +18,10 @@ const TOOLS = [
   { id: 'todo-list', name: 'Todo List', icon: ListTodo, description: 'Gérez vos tâches quotidiennes et restez productif.' },
 ];
 
+interface DashboardUser extends SupabaseUser {
+  username?: string;
+}
+
 export default function Dashboard() {
   const [activeToolId, setActiveToolId] = useState('youtube-kanban');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
