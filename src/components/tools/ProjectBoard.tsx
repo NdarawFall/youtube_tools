@@ -71,18 +71,27 @@ export default function ProjectBoard({ projectId, theme }: { projectId: string, 
         <div key={column.id} className={`flex-none w-72 rounded-2xl border ${borderClass} ${colBgClass} p-4 flex flex-col gap-4`}>
           <h3 className={`font-bold ${textClass}`}>{column.title}</h3>
           
-          <div className="flex-1 flex flex-col gap-2">
-            {tasks.filter(t => t.status === column.id).map(task => (
-              <div key={task.id} className={`group p-3 rounded-lg border ${borderClass} flex justify-between items-center`}>
-                <div onClick={() => { setModalTask(task); setEditContent(task.content); }} className="flex-1 cursor-pointer truncate">
-                    {column.id === 'publication' ? <label className="flex items-center gap-2 truncate"><input type="checkbox" /> {task.title}</label> : task.title}
+          <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-2">
+            {column.id === 'publication' ? (
+                <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded" /> Vidéo validée</label>
+                    <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded" /> Vidéo publiée</label>
                 </div>
-                <button onClick={() => { supabase.from('tasks').delete().eq('id', task.id); setTasks(prev => prev.filter(t => t.id !== task.id)); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"><X className="w-4 h-4" /></button>
-              </div>
-            ))}
-            <button onClick={() => addTask(column.id)} className="w-full p-3 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
-                <Plus className="w-4 h-4" /> Ajouter
-            </button>
+            ) : (
+                <>
+                {tasks.filter(t => t.status === column.id).map(task => (
+                <div key={task.id} className={`group p-3 rounded-lg border ${borderClass} flex justify-between items-center`}>
+                    <div onClick={() => { setModalTask(task); setEditContent(task.content); }} className="flex-1 cursor-pointer truncate">
+                        {task.content ? task.content.substring(0, 20) + (task.content.length > 20 ? '...' : '') : task.title}
+                    </div>
+                    <button onClick={() => { supabase.from('tasks').delete().eq('id', task.id); setTasks(prev => prev.filter(t => t.id !== task.id)); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"><X className="w-4 h-4" /></button>
+                </div>
+                ))}
+                <button onClick={() => addTask(column.id)} className="w-full p-3 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                    <Plus className="w-4 h-4" /> Ajouter
+                </button>
+                </>
+            )}
           </div>
         </div>
       ))}
