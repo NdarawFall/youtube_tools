@@ -20,7 +20,7 @@ export default function EnhancePrompt({ theme }: { theme: 'dark' | 'light' }) {
 
         // Note: Pour une sécurité maximale, cet appel devrait se faire dans une Edge Function.
         // Ici, appel direct simplifié pour le prototypage.
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${profile.gemini_api_key}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${profile.gemini_api_key}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: `Optimise ce prompt pour une IA : ${prompt}` }] }] })
