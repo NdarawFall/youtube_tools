@@ -33,36 +33,38 @@ export default function Dashboard() {
   const [user, setUser] = useState<DashboardUser | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const theme = 'dark';
+const fetchUser = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+      setUser({ ...user, username: user.user_metadata.username || 'Utilisateur' });
+      // Fetch avatar from profiles table
+      const { data: profile } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
+      if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
+      else if (user.user_metadata?.avatar_url) setAvatarUrl(user.user_metadata.avatar_url);
+  }
+};
 
-  useEffect(() => {
-    const fetchUser = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            setUser({ ...user, username: user.user_metadata.username || 'Utilisateur' });
-            const { data: profile } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
-            if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
-        }
-    };
-    fetchUser();
-  }, []);
+useEffect(() => {
+  fetchUser();
+}, []);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/';
-  };
+const handleLogout = async () => {
+  await supabase.auth.signOut();
+  window.location.href = '/';
+};
 
-  const renderTool = () => {
-    switch (activeToolId) {
-      case 'youtube-kanban': return <YouTubeStudio theme={theme} />;
-      case 'enhance-prompt': return <EnhancePrompt theme={theme} />;
-      case 'settings': return <Settings theme={theme} />;
-      case 'frame-extractor': return <VideoProcessor theme={theme} />;
-      case 'char-counter': return <CharacterCounter theme={theme} />;
-      case 'reverse-video': return <ReverseVideo theme={theme} />;
-      case 'todo-list': return <TodoList theme={theme} />;
-      default: return <div className="text-center py-20 opacity-50">Outil en développement...</div>;
-    }
-  };
+const renderTool = () => {
+  switch (activeToolId) {
+    case 'youtube-kanban': return <YouTubeStudio theme={theme} />;
+    case 'enhance-prompt': return <EnhancePrompt theme={theme} />;
+    case 'settings': return <Settings theme={theme} onProfileUpdate={fetchUser} />;
+    case 'frame-extractor': return <VideoProcessor theme={theme} />;
+    case 'char-counter': return <CharacterCounter theme={theme} />;
+    case 'reverse-video': return <ReverseVideo theme={theme} />;
+    case 'todo-list': return <TodoList theme={theme} />;
+    default: return <div className="text-center py-20 opacity-50">Outil en développement...</div>;
+  }
+};
 
   return (
     <main className="h-screen w-screen font-sans p-4 flex flex-col overflow-hidden bg-[#050608] text-slate-200">
