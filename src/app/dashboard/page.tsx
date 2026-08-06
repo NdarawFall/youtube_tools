@@ -1,16 +1,17 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { Video, LayoutGrid, LogOut, User, Moon, Sun, ListTodo, Film, Type, RefreshCw, Sparkles } from 'lucide-react';
-import EnhancePrompt from '@/components/tools/EnhancePrompt';
+import { Video, LayoutGrid, LogOut, Moon, Sun, ListTodo, Film, Type, RefreshCw, Sparkles, Settings as SettingsIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTubeStudio from '@/components/tools/YouTubeStudio';
-import VideoProcessor from '@/components/VideoProcessor';
+import VideoProcessor from '@/components/tools/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
 import TodoList from '@/components/tools/TodoList';
+import EnhancePrompt from '@/components/tools/EnhancePrompt';
+import Settings from '@/components/tools/Settings';
+import Link from 'next/link';
 
 const TOOLS = [
   { id: 'youtube-kanban', name: 'YouTube Studio', icon: Film, description: 'Organisez vos projets vidéo de l\'idée à la publication.' },
@@ -19,6 +20,7 @@ const TOOLS = [
   { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Analysez la longueur de vos scripts pour optimiser le temps de parole.' },
   { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inversez le sens de lecture de vos clips pour des effets créatifs.' },
   { id: 'todo-list', name: 'Todo List', icon: ListTodo, description: 'Gérez vos tâches quotidiennes et restez productif.' },
+  { id: 'settings', name: 'Paramètres', icon: SettingsIcon, description: 'Gérez votre profil.' },
 ];
 
 interface DashboardUser extends SupabaseUser {
@@ -37,7 +39,6 @@ export default function Dashboard() {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
             setUser({ ...user, username: user.user_metadata.username || 'Utilisateur' });
-            // Fetch avatar from profiles table
             const { data: profile } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
             if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
         }
@@ -54,6 +55,7 @@ export default function Dashboard() {
     switch (activeToolId) {
       case 'youtube-kanban': return <YouTubeStudio theme={theme} />;
       case 'enhance-prompt': return <EnhancePrompt theme={theme} />;
+      case 'settings': return <Settings theme={theme} />;
       case 'frame-extractor': return <VideoProcessor theme={theme} />;
       case 'char-counter': return <CharacterCounter theme={theme} />;
       case 'reverse-video': return <ReverseVideo theme={theme} />;
