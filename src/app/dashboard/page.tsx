@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { Video, LayoutGrid, LogOut, User, Moon, Sun, ListTodo, Film, Type, RefreshCw, Sparkles } from 'lucide-react';
