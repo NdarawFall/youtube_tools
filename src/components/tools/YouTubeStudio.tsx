@@ -57,7 +57,11 @@ export default function YouTubeStudio({ theme }: { theme: 'dark' | 'light' }) {
                 <h2 className="text-xl font-bold mb-6">Vos Projets</h2>
                 <div className="flex gap-2 mb-8">
                     <input value={newProjectName} onChange={(e) => setNewProjectName(e.target.value)} placeholder="Nom du nouveau projet" className="flex-1 p-3 rounded-xl bg-slate-800 border border-slate-700 outline-none" />
-                    <button onClick={addProject} className="px-6 py-3 bg-red-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-red-700 active:scale-95 transition-all cursor-pointer z-10">
+                    <button 
+                        onClick={addProject} 
+                        disabled={!newProjectName.trim()}
+                        className="px-6 py-3 bg-red-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-red-700 active:scale-95 transition-all cursor-pointer z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                         <Plus className="w-5 h-5"/> Créer
                     </button>
                 </div>
@@ -75,9 +79,9 @@ export default function YouTubeStudio({ theme }: { theme: 'dark' | 'light' }) {
             </div>
         ) : (
             <div className="w-full h-full flex flex-col">
-                <div className="flex justify-between items-center mb-4">
-                    <button onClick={() => setActiveProjectId(null)} className="text-sm text-slate-500 hover:text-white">← Retour aux projets</button>
-                    <span className="font-bold">{projects.find(p => p.id === activeProjectId)?.name}</span>
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-bold">{projects.find(p => p.id === activeProjectId)?.name}</h2>
+                    <button onClick={() => setActiveProjectId(null)} className="text-sm text-slate-500 hover:text-white px-4 py-2 rounded-lg bg-slate-800">← Retour aux projets</button>
                 </div>
                 <div className="flex-1 min-h-0">
                     <ProjectBoard projectId={activeProjectId} theme={theme} />

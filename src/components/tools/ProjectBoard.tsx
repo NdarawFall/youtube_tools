@@ -87,7 +87,7 @@ export default function ProjectBoard({ projectId, theme }: { projectId: string, 
                     <button onClick={() => { supabase.from('tasks').delete().eq('id', task.id); setTasks(prev => prev.filter(t => t.id !== task.id)); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"><X className="w-4 h-4" /></button>
                 </div>
                 ))}
-                <button onClick={() => addTask(column.id)} className="w-full p-3 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                <button onClick={() => addTask(column.id)} className="w-full p-3 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
                     <Plus className="w-4 h-4" /> Ajouter
                 </button>
                 </>
