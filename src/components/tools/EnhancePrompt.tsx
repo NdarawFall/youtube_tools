@@ -26,7 +26,18 @@ export default function EnhancePrompt({ theme }: { theme: 'dark' | 'light' }) {
             body: JSON.stringify({ contents: [{ parts: [{ text: `Optimise ce prompt pour une IA : ${prompt}` }] }] })
         });
         const data = await response.json();
-        setEnhanced(data.candidates[0].content.parts[0].text);
+        
+        console.log('API Response:', data);
+
+        if (data.error) {
+            throw new Error(`API Error: ${data.error.message}`);
+        }
+
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+            setEnhanced(data.candidates[0].content.parts[0].text);
+        } else {
+            throw new Error('Structure de réponse API inattendue');
+        }
     } catch (e: any) {
         alert(e.message);
     }
