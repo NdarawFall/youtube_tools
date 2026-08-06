@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { Video, LayoutGrid, LogOut, User, Moon, Sun, ListTodo, Film, Type, RefreshCw } from 'lucide-react';
+import { Video, LayoutGrid, LogOut, User, Moon, Sun, ListTodo, Film, Type, RefreshCw, Sparkles } from 'lucide-react';
+import EnhancePrompt from '@/components/tools/EnhancePrompt';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTubeStudio from '@/components/tools/YouTubeStudio';
 import VideoProcessor from '@/components/VideoProcessor';
@@ -12,6 +13,7 @@ import TodoList from '@/components/tools/TodoList';
 
 const TOOLS = [
   { id: 'youtube-kanban', name: 'YouTube Studio', icon: Film, description: 'Organisez vos projets vidéo de l\'idée à la publication.' },
+  { id: 'enhance-prompt', name: 'Enhance Prompt', icon: Sparkles, description: 'Améliorez vos prompts pour de meilleurs résultats.' },
   { id: 'frame-extractor', name: 'Frame Extractor', icon: Video, description: 'Extrayez facilement des images haute définition de vos fichiers vidéo.' },
   { id: 'char-counter', name: 'Script Counter', icon: Type, description: 'Analysez la longueur de vos scripts pour optimiser le temps de parole.' },
   { id: 'reverse-video', name: 'Reverse Video', icon: RefreshCw, description: 'Inversez le sens de lecture de vos clips pour des effets créatifs.' },
@@ -50,6 +52,7 @@ export default function Dashboard() {
   const renderTool = () => {
     switch (activeToolId) {
       case 'youtube-kanban': return <YouTubeStudio theme={theme} />;
+      case 'enhance-prompt': return <EnhancePrompt theme={theme} />;
       case 'frame-extractor': return <VideoProcessor theme={theme} />;
       case 'char-counter': return <CharacterCounter theme={theme} />;
       case 'reverse-video': return <ReverseVideo theme={theme} />;
@@ -65,10 +68,10 @@ export default function Dashboard() {
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2.5 rounded-2xl border bg-[#0a0c10] border-slate-800 text-slate-400">
             <LayoutGrid className="w-4 h-4" />
           </button>
-          <div className="flex items-center gap-2 font-bold text-base tracking-tight">
+          <Link href="/" className="flex items-center gap-2 font-bold text-base tracking-tight hover:opacity-80 transition-opacity">
             <Video className="w-5 h-5 text-red-500" />
             Creator<span className="text-red-500 italic">Studio</span>
-          </div>
+          </Link>
         </div>
         <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-2 rounded-2xl border border-slate-800 bg-[#0a0c10]">
