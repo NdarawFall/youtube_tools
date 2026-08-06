@@ -5,7 +5,7 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 import { Video, LayoutGrid, LogOut, Moon, Sun, ListTodo, Film, Type, RefreshCw, Sparkles, Settings as SettingsIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTubeStudio from '@/components/tools/YouTubeStudio';
-import VideoProcessor from '@/components/tools/VideoProcessor';
+import VideoProcessor from '@/components/VideoProcessor';
 import CharacterCounter from '@/components/tools/CharacterCounter';
 import ReverseVideo from '@/components/tools/ReverseVideo';
 import TodoList from '@/components/tools/TodoList';
