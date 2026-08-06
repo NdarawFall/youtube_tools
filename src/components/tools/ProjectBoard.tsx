@@ -84,7 +84,10 @@ export default function ProjectBoard({ projectId, theme }: { projectId: string, 
                     <div onClick={() => { setModalTask(task); setEditContent(task.content); }} className="flex-1 cursor-pointer truncate">
                         {task.content ? task.content.substring(0, 20) + (task.content.length > 20 ? '...' : '') : task.title}
                     </div>
-                    <button onClick={() => { supabase.from('tasks').delete().eq('id', task.id); setTasks(prev => prev.filter(t => t.id !== task.id)); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"><X className="w-4 h-4" /></button>
+                    <button onClick={async () => { 
+                    await supabase.from('tasks').delete().eq('id', task.id); 
+                    setTasks(prev => prev.filter(t => t.id !== task.id)); 
+                }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"><X className="w-4 h-4" /></button>
                 </div>
                 ))}
                 <button onClick={() => addTask(column.id)} className="w-full p-3 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
