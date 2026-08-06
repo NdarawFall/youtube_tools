@@ -7,8 +7,10 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     rules: {
+      // Le chargement de données côté client passe par des effets, faute de
+      // bibliothèque dédiée (React Query, SWR). À réactiver si l'une d'elles
+      // est adoptée.
       "react-hooks/set-state-in-effect": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
     },
   },
   // Override default ignores of eslint-config-next.

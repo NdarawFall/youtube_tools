@@ -1,10 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Auth from '@/components/Auth';
-import { supabase } from '@/lib/supabase';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
+import { supabase } from '@/lib/supabase/client';
 import { Session } from '@supabase/supabase-js';
 import { motion, Variants } from 'framer-motion';
-import { ArrowRight, ChevronDown, Video } from 'lucide-react';
+import { ArrowRight, Video } from 'lucide-react';
 import Link from 'next/link';
 
 const PAIN_POINTS = [
@@ -31,12 +31,7 @@ const fadeUp: Variants = {
 };
 
 export default function LandingPage() {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authInitialMode, setAuthInitialMode] = useState<'login' | 'signup-avatar'>('login');
   const [session, setSession] = useState<Session | null>(null);
-
-  const openLogin = () => { setAuthInitialMode('login'); setIsAuthModalOpen(true); };
-  const openSignup = () => { setAuthInitialMode('signup-avatar'); setIsAuthModalOpen(true); };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
@@ -58,12 +53,7 @@ export default function LandingPage() {
             Mon espace →
           </Link>
         ) : (
-          <div className="flex items-center gap-1">
-            <button onClick={openLogin} className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors font-medium">Connexion</button>
-            <button onClick={openSignup} className="px-5 py-2 rounded-full bg-white text-[#050608] text-sm font-bold hover:bg-slate-200 transition-all shadow-lg">
-              Commencer
-            </button>
-          </div>
+          <GoogleSignInButton label="Se connecter" variant="outline" className="px-5 py-2 rounded-full text-sm" />
         )}
       </nav>
 
@@ -115,14 +105,7 @@ export default function LandingPage() {
                   Accéder au Studio <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               ) : (
-                <>
-                  <button onClick={openSignup} className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#050608] font-bold text-base hover:bg-slate-100 transition-all shadow-2xl">
-                    Démarrer gratuitement <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                  <button onClick={openLogin} className="px-8 py-4 rounded-2xl text-slate-400 font-medium text-base hover:text-white transition-colors">
-                    Déjà un compte
-                  </button>
-                </>
+                <GoogleSignInButton label="Démarrer gratuitement" className="px-8 py-4 rounded-2xl text-base" />
               )}
             </motion.div>
           </motion.div>
@@ -135,7 +118,7 @@ export default function LandingPage() {
       <section id="problem" className="py-28 px-6 md:px-12 relative">
         <div className="max-w-2xl mx-auto bg-amber-950/20 border border-amber-900/50 p-6 rounded-2xl mb-16 text-center">
             <p className="text-amber-500 font-semibold">⚠️ Attention : Expérience optimisée</p>
-            <p className="text-slate-400 text-sm mt-2">Pour une utilisation optimale de CreatorStudio, veuillez utiliser un ordinateur ou une tablette. L'interface n'est pas adaptée aux smartphones.</p>
+            <p className="text-slate-400 text-sm mt-2">Pour une utilisation optimale de CreatorStudio, veuillez utiliser un ordinateur ou une tablette. L&apos;interface n&apos;est pas adaptée aux smartphones.</p>
         </div>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -287,9 +270,10 @@ export default function LandingPage() {
                 Ouvrir le Studio <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             ) : (
-              <button onClick={openSignup} className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-white text-[#050608] font-black text-lg hover:bg-slate-100 transition-all shadow-2xl shadow-white/10">
-                Créer mon espace gratuit <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <GoogleSignInButton
+                label="Créer mon espace gratuit"
+                className="px-10 py-5 rounded-2xl text-lg shadow-white/10"
+              />
             )}
           </motion.div>
         </div>
@@ -300,8 +284,6 @@ export default function LandingPage() {
         <span className="font-bold text-slate-500">Creator<span className="text-red-700 italic">Studio</span></span>
         <span>© {new Date().getFullYear()} — Tous droits réservés</span>
       </footer>
-
-      {isAuthModalOpen && <Auth theme="dark" initialMode={authInitialMode} onClose={() => setIsAuthModalOpen(false)} />}
     </main>
   );
 }

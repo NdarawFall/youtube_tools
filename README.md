@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CreatorStudio
 
-## Getting Started
+Tableau de bord tout-en-un pour les créateurs de contenu « faceless » : centraliser
+les idées, suivre le pipeline de production vidéo, et regrouper les outils du
+quotidien dans un seul espace de travail.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) · **React 19** · **TypeScript**
+- **Tailwind CSS v4** · **Framer Motion** · **lucide-react**
+- **Supabase** (authentification + PostgreSQL)
+- **ffmpeg.wasm** pour le traitement vidéo côté navigateur
+
+## Démarrage
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application est disponible sur [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Variables d'environnement
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Créez un fichier `.env.local` à la racine :
 
-## Learn More
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://<votre-projet>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<votre-clé-anon>
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+src/
+├── app/                    Routes (App Router)
+│   ├── page.tsx            Landing publique
+│   ├── dashboard/          Espace de travail (protégé)
+│   └── auth/               Callback OAuth et onboarding
+├── components/
+│   ├── tools/              Les outils du dashboard
+│   └── Auth.tsx            Modale de connexion / inscription
+├── lib/
+│   └── supabase/           Clients Supabase (client, serveur, middleware)
+└── middleware.ts           Session, garde d'authentification, blocage mobile
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Outils disponibles
 
-## Deploy on Vercel
+| Outil | Rôle |
+| --- | --- |
+| YouTube Studio | Projets vidéo et kanban de production |
+| Enhance Prompt | Optimisation de prompts via Gemini |
+| Frame Extractor | Extraction de la première / dernière image d'une vidéo |
+| Script Counter | Analyse de la longueur des scripts |
+| Reverse Video | Inversion du sens de lecture d'un clip |
+| Todo List | Gestion des tâches quotidiennes |
+| Paramètres | Profil, avatar, clé API |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Base de données
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Les scripts SQL et les commandes d'administration Supabase sont regroupés dans
+`private/NOTES.md` (non versionné).
+
+## Scripts
+
+```bash
+npm run dev      # serveur de développement
+npm run build    # build de production
+npm run start    # serveur de production
+npm run lint     # linter
+```
+
+## Note sur le support mobile
+
+L'interface est conçue pour ordinateur et tablette. Les visiteurs mobiles sont
+redirigés vers `/mobile-restricted` par le middleware.
