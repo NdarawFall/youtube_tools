@@ -6,6 +6,7 @@ import { Save } from 'lucide-react';
 export default function Settings({ theme, onProfileUpdate }: { theme: 'dark' | 'light', onProfileUpdate: () => void }) {
   const [username, setUsername] = useState('');
   const [avatar, setAvatar] = useState<'homme' | 'femme'>('homme');
+  const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -13,8 +14,9 @@ export default function Settings({ theme, onProfileUpdate }: { theme: 'dark' | '
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
             setUsername(user.user_metadata.username || '');
-            const { data: profile } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
+            const { data: profile } = await supabase.from('profiles').select('avatar_url, gemini_api_key').eq('id', user.id).single();
             if (profile?.avatar_url) setAvatar(profile.avatar_url.includes('homme') ? 'homme' : 'femme');
+            if (profile?.gemini_api_key) setApiKey(profile.gemini_api_key);
         }
     };
     fetchProfile();
@@ -25,9 +27,9 @@ export default function Settings({ theme, onProfileUpdate }: { theme: 'dark' | '
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
         await supabase.auth.updateUser({ data: { username } });
-        await supabase.from('profiles').upsert({ id: user.id, avatar_url: `/${avatar === 'homme' ? 'avatar-homme' : 'avatar-femme'}.png` });
+        await supabase.from('profiles').upsert({ id: user.id, avatar_url: `/${avatar === 'homme' ? 'avatar-homme' : 'avatar-femme'}.png`, gemini_api_key: apiKey });
         alert('Paramètres enregistrés !');
-        onProfileUpdate(); // Notifie le parent
+        onProfileUpdate();
     }
     setLoading(false);
   };
@@ -40,6 +42,10 @@ export default function Settings({ theme, onProfileUpdate }: { theme: 'dark' | '
                 <div>
                     <label className="block text-sm font-medium text-slate-400 mb-2">Nom d'utilisateur</label>
                     <input value={username} onChange={(e) => setUsername(e.target.value)} className="w-full p-4 rounded-xl bg-black/20 border border-slate-700 outline-none focus:border-red-500" />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-2">Clé API Gemini</label>
+                    <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} className="w-full p-4 rounded-xl bg-black/20 border border-slate-700 outline-none focus:border-red-500" placeholder="AIza..." />
                 </div>
                 
                 <div>
