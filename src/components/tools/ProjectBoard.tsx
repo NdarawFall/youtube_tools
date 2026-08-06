@@ -73,8 +73,11 @@ export default function ProjectBoard({ projectId, theme }: { projectId: string, 
           
           <div className="flex-1 flex flex-col gap-2">
             {tasks.filter(t => t.status === column.id).map(task => (
-              <div key={task.id} onClick={() => { setModalTask(task); setEditContent(task.content); }} className={`p-3 rounded-lg border ${borderClass} cursor-pointer hover:bg-slate-800/20`}>
-                {column.id === 'publication' ? <label className="flex items-center gap-2"><input type="checkbox" /> {task.title}</label> : task.title}
+              <div key={task.id} className={`group p-3 rounded-lg border ${borderClass} flex justify-between items-center`}>
+                <div onClick={() => { setModalTask(task); setEditContent(task.content); }} className="flex-1 cursor-pointer truncate">
+                    {column.id === 'publication' ? <label className="flex items-center gap-2 truncate"><input type="checkbox" /> {task.title}</label> : task.title}
+                </div>
+                <button onClick={() => { supabase.from('tasks').delete().eq('id', task.id); setTasks(prev => prev.filter(t => t.id !== task.id)); }} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"><X className="w-4 h-4" /></button>
               </div>
             ))}
             <button onClick={() => addTask(column.id)} className="w-full p-3 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
@@ -86,9 +89,9 @@ export default function ProjectBoard({ projectId, theme }: { projectId: string, 
 
       {modalTask && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className={`w-full max-w-lg rounded-3xl p-8 border ${borderClass} ${bgClass}`}>
+            <div className={`w-full max-w-4xl h-[80vh] rounded-3xl p-8 border ${borderClass} ${bgClass} flex flex-col`}>
                 <h3 className={`text-xl font-bold mb-4 ${textClass}`}>{modalTask.title}</h3>
-                <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} className={`w-full h-40 p-3 rounded-lg bg-black/10 ${textClass}`} />
+                <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} className={`flex-1 w-full p-4 rounded-lg bg-black/10 ${textClass}`} />
                 <div className="flex justify-between mt-6">
                     <button onClick={() => { supabase.from('tasks').delete().eq('id', modalTask.id); setTasks(prev => prev.filter(t => t.id !== modalTask.id)); setModalTask(null); }} className="text-red-500 text-sm">Supprimer</button>
                     <button onClick={updateTask} className="px-5 py-2 bg-red-600 text-white rounded-xl text-sm">Enregistrer</button>
